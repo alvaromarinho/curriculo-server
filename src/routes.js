@@ -8,9 +8,14 @@ const UsersController = require('./controllers/UsersController');
 
 
 //users
-router.post('/api/user', UsersController.create);
 router.post('/api/auth',UsersController.auth);
-router.get('/api/user/:id', middleAuth, UsersController.read);
+router.post('/api/user', UsersController.create);
+router.get('/api/user', middleAuth, UsersController.read);
+router.put('/api/user', middleAuth, UsersController.change);
+router.delete('/api/user', middleAuth, UsersController.remover);
+
+
+router.get('/api/image', UsersController.getImage);
 
 //projects
 // router.post('/api/project', middleAuth, ProjectsController.store);

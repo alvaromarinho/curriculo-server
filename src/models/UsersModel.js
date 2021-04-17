@@ -11,24 +11,21 @@ const insert = (data, callback) => {
 
 const select = (data, callback) => {
     connection.query(`SELECT * FROM user WHERE ?;`, data, (err, res) => {
-        if(err || res.length === 0) {
-            throw err;
-        }
-        callback(res.length > 1 ? res : res[0]);
+        callback(err, res.length > 1 ? res : res[0]);
     });
 }
 
-const update = (data, callback) => {
-    connection.query(`UPDATE user WHERE ?;`, data, (err, res) => {
-        if(err || res.length === 0) {
+const update = (data,id, callback) => {
+    connection.query(`UPDATE user SET ? WHERE ?;`, [data,id], (err, res) => {
+        if(err) {
             throw err;
         }
-        callback(res.length > 1 ? res : res[0]);
+        callback(res);
     });
 }
 
 const remove = (data, callback) => {
-    connection.query(`DELETE user WHERE ?;`, data, (err, res) => {
+    connection.query(`DELETE FROM user WHERE ?;`, data, (err, res) => {
         if(err) {
             throw err;
         }
@@ -40,5 +37,6 @@ const remove = (data, callback) => {
 module.exports = {
     insert,
     select,
+    update,
     remove
 }
