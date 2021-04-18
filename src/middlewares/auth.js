@@ -5,18 +5,18 @@ module.exports = (req, res, next) => {
     try {
         const authHeader = req.headers.authorization;
 
-        if(!authHeader) throw new Error();
+        if(!authHeader) return next({ httpStatusCode: 400, responseMessage: 'authorization header not found' });
 
         const splitedToken = authHeader.split(' ');
 
-        if(splitedToken.length !== 2) throw new Error();
+        if(splitedToken.length !== 2) return next({ httpStatusCode: 400, responseMessage: 'wrong authorization header' });
 
         const [schema, token] = splitedToken;
 
-        if(schema !== 'Bearer') throw new Error();
+        if(schema !== 'Bearer') return next({ httpStatusCode: 400, responseMessage: 'authorization header not allowed' });
 
         jwt.verify(token, json.secret, (err, decoded) => {
-            if (err) throw new Error();
+            if (err) return next({ httpStatusCode: 400, responseMessage: err });
 
             req.userId = decoded.id;
             return next();

@@ -14,10 +14,10 @@ app.use(multiParty());
 app.use(cors());
 app.use(routes);
 
-app.use((error, req, res, next) => {
-    res.status(error.httpStatusCode).json(error.responseMessage || "Internal Server Error");
+app.use((err, req, res, next) => {
+    res.status(err.httpStatusCode || 500).json(err.responseMessage);
 });
 
 app.listen(process.env.PORT || 3000, () => {
-    console.log(`server runing in port:${ process.env.PORT || 3000 }`);
+    console.log(`server runing in port:${ process.env.PORT || 3000 }\n`);
 });

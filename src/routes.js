@@ -9,10 +9,10 @@ const UsersController = require('./controllers/UsersController');
 
 //users
 router.post('/api/auth',UsersController.auth);
-router.post('/api/user', UsersController.create);
-router.get('/api/user', middleAuth, UsersController.read);
-router.put('/api/user', middleAuth, UsersController.change);
-router.delete('/api/user', middleAuth, UsersController.remover);
+router.post('/api/user', UsersController.createUser);
+router.get('/api/user', middleAuth, UsersController.findUser);
+router.put('/api/user', middleAuth, UsersController.updateUser);
+router.delete('/api/user', middleAuth, UsersController.deleteUser);
 
 
 router.get('/api/image', UsersController.getImage);
