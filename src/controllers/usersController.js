@@ -1,16 +1,17 @@
-const { insert, select, update, remove } = require('../models/UsersModel');
+const { insert, select, update, remove } = require('../models/genericModel');
 const json = require("../config/config.json");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const path = require('path')
 const fs = require('fs');
 
+const TABLE = 'users';
 const PATH_DESTINY = path.resolve('./assets/img');
 
 const auth = (req, res, next) => {
     const { email, password } = req.body;
 
-    select({ email }, (err, user) => {
+    select('users', { email }, (err, user) => {
         if (err) return next({ httpStatusCode: 400, responseMessage: err.sqlMessage });
         if (!user) return next({ httpStatusCode: 404 });
         if (!bcrypt.compareSync(password, user.password)) return next({ httpStatusCode: 401 });
@@ -23,20 +24,13 @@ const auth = (req, res, next) => {
 }
 
 const createUser = (req, res, next) => {
-    const data = {
-        name: req.body.name,
-        description: req.body.description,
-        email: req.body.email,
-        city: req.body.city,
-        img_url: uploadImage(req.body.email, req.files),
-        uf: req.body.uf,
-        password: bcrypt.hashSync(req.body.password, bcrypt.genSaltSync())
-    }
+    req.body.img_url = uploadImage(req.body.email, req.files);
+    req.body.password = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync());
 
-    insert(data, (err, result) => {
+    insert(TABLE, req.body, (err, result) => {
         if (err) return next({ httpStatusCode: 400, responseMessage: err.sqlMessage });
 
-        select({ id: result.insertId }, (err, user) => {
+        select(TABLE, { id: result.insertId }, (err, user) => {
             if (err) return next({ httpStatusCode: 400, responseMessage: err.sqlMessage });
             delete user.password;
             res.status(201).json(user);
@@ -45,7 +39,7 @@ const createUser = (req, res, next) => {
 }
 
 const findUser = (req, res, next) => {
-    select({ id: req.userId }, (err, user) => {
+    select(TABLE, { id: req.userId }, (err, user) => {
         if (err) return next({ httpStatusCode: 400, responseMessage: err.sqlMessage });
         delete user.password;
         res.status(200).json(user);
@@ -58,10 +52,10 @@ const updateUser = (req, res, next) => {
     if (req.files) data.img_url = uploadImage(data.email, req.files);
     if (data.password) data.password = bcrypt.hashSync(data.password, bcrypt.genSaltSync());
 
-    update(data, { id: req.userId }, (err) => {
+    update(TABLE, data, { id: req.userId }, (err) => {
         if (err) return next({ httpStatusCode: 400, responseMessage: err.sqlMessage });
 
-        select({ id: req.userId }, (err, user) => {
+        select(TABLE, { id: req.userId }, (err, user) => {
             if (err) return next({ httpStatusCode: 400, responseMessage: err.sqlMessage });
             delete user.password;
             res.status(200).json(user);
@@ -70,7 +64,7 @@ const updateUser = (req, res, next) => {
 }
 
 const deleteUser = (req, res) => {
-    remove({ id: req.userId }, (err) => {
+    remove(TABLE, { id: req.userId }, (err) => {
         if (err) return next({ httpStatusCode: 400, responseMessage: err.sqlMessage });
         res.status(200);
     });
@@ -88,13 +82,15 @@ const getImage = (req, res) => {
 }
 
 const uploadImage = (email, file) => {
+    console.log(file)
     try {
         if (!fs.existsSync(`${PATH_DESTINY}/${email}`)) {
             fs.mkdirSync(`${PATH_DESTINY}/${email}`);
         }
         if (file.img_url) {
+            const img = Array.isArray(file.img_url) ? file.img_url[0] : file.img_url
             const urlImg = `${new Date().getTime()}.png`;
-            fs.renameSync(file.img_url.path, `${PATH_DESTINY}/${email}/${urlImg}`);
+            fs.renameSync(img.path, `${PATH_DESTINY}/${email}/${urlImg}`);
             return `${email}/${urlImg}`;
         }
     } catch (e) {

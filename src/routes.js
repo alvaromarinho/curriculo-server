@@ -2,31 +2,25 @@ const express = require("express");
 const router = express.Router();
 const middleAuth = require("./middlewares/auth");
 // const middleVerifyOwner = require("./middlewares/VerifyUser");
-const UsersController = require('./controllers/UsersController');
-// const ProjectsController = require("./controllers/ProjectsController");
-// const TasksController = require("./controllers/TasksController");
 
+const usersController = require('./controllers/usersController');
+const phonesController = require('./controllers/phonesController');
 
-//users
-router.post('/api/auth',UsersController.auth);
-router.post('/api/user', UsersController.createUser);
-router.get('/api/user', middleAuth, UsersController.findUser);
-router.put('/api/user', middleAuth, UsersController.updateUser);
-router.delete('/api/user', middleAuth, UsersController.deleteUser);
+router.post('/api/auth', usersController.auth);
+router.get('/api/image', usersController.getImage);
 
+// router.get('/api/site/:id', sitesController.getAll);
 
-router.get('/api/image', UsersController.getImage);
+// users
+router.post('/api/user', usersController.createUser);
+router.get('/api/user', middleAuth, usersController.findUser);
+router.put('/api/user', middleAuth, usersController.updateUser);
+router.delete('/api/user', middleAuth, usersController.deleteUser);
 
-//projects
-// router.post('/api/project', middleAuth, ProjectsController.store);
-// router.get('/api/projects', middleAuth, ProjectsController.indexAllByUser);
-// router.put("/api/project/:id", middleAuth, middleVerifyOwner({ model: 'project' }), ProjectsController.update);
-// router.delete("/api/project/:id", middleAuth, middleVerifyOwner({ model: 'project' }), ProjectsController.delete);
-
-// //tasks
-// router.post('/api/task', middleAuth, middleVerifyOwner({ model: 'project_task' }), TasksController.store);
-// router.get('/api/tasks/:project', middleAuth, middleVerifyOwner({ model: 'get_task_by_project' }),TasksController.indexByProject);
-// router.put("/api/task/:id", middleAuth, middleVerifyOwner({ model: 'task' }), TasksController.update);
-// router.delete("/api/task/:id", middleAuth, middleVerifyOwner({ model: 'task' }), TasksController.delete);
+// phone
+router.post('/api/phones', phonesController.createPhone);
+router.get('/api/phones', middleAuth, phonesController.findPhone);
+router.put('/api/phones', middleAuth, phonesController.updatePhone);
+router.delete('/api/phones', middleAuth, phonesController.deletePhone);
 
 module.exports = router;

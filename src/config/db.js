@@ -7,12 +7,9 @@ const con = mysql.createConnection({
     database: 'alvin'
 });
 
+con.connect((err) => {
+    if (err) throw err;
+    console.log("DB Connected!\n");
+});
 
-module.exports = () => {
-    return mysql.createConnection({
-        hots: "localhost",
-        user: 'root',
-        password: 'root',
-        database: 'alvin'
-    });
-}
+module.exports = con;
