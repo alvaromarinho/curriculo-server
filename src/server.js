@@ -16,8 +16,7 @@ app.use(cors());
 app.use(routes);
 
 app.use((err, req, res, next) => {
-    console.log(`[${req.method}]`, req.url);
-    console.log(err);
+    console.log(`[error] ${req.method} => ${req.url}`);
     res.status(err.httpStatusCode || 500).json(err.responseMessage);
 });
 

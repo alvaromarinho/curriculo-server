@@ -1,30 +1,40 @@
-const { insert, select, update, remove } = require('../models/genericModel');
-const json = require("../config/config.json");
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
-const path = require('path')
-const fs = require('fs');
+const query = require('../models/genericModel');
 
 const TABLE = 'phones';
 
-const createPhone = (req, res, next) => {
-
+const createPhone = async (req, res, next) => {
+    try {
+        req.body.user_id = req.userId;
+        const result = await query('INSERT', TABLE, req.body);
+        const phone = await query('SELECT', TABLE, null, { id: result.insertId });
+        delete phone.user_id;
+        return req.innerRequest ? phone : res.status(201).json(phone);
+    } catch (error) {
+        if (req.innerRequest) throw error
+        next({ httpStatusCode: 400, responseMessage: error.sqlMessage || error })
+    }
 }
 
-const findPhone = (req, res, next) => {
-
+const findPhoneByUser = async (req, res, next) => {
+    try {
+        const phones = await query('SELECT', TABLE, null, { user_id: req.userId }) || [];
+        if(phones.length)
+            phones.map((p) => delete p.user_id);
+        return req.innerRequest ? phones : res.status(200).json(phones);
+    } catch (error) {
+        if (req.innerRequest) throw error
+        next({ httpStatusCode: 400, responseMessage: error.sqlMessage || error })
+    }
 }
 
-const findPhoneByUser = (req, res, next) => {
-
+const deletePhone = async (req, res, next) => {
+    try {
+        const response = await query('DELETE', TABLE, null, req.body);
+        return req.innerRequest ? response.affectedRows : res.status(200).json(`${response.affectedRows} telefone(s) deletado(s)`);
+    } catch (error) {
+        if (req.innerRequest) throw error
+        next({ httpStatusCode: 400, responseMessage: error.sqlMessage || error })
+    }
 }
 
-const updatePhone = (req, res, next) => {
-
-}
-
-const deletePhone = (req, res) => {
-
-}
-
-module.exports = { createPhone, findPhone, findPhoneByUser, updatePhone, deletePhone }
+module.exports = { createPhone, findPhoneByUser, deletePhone }

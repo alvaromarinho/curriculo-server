@@ -18,9 +18,8 @@ router.put('/api/user', middleAuth, usersController.updateUser);
 router.delete('/api/user', middleAuth, usersController.deleteUser);
 
 // phone
-router.post('/api/phones', phonesController.createPhone);
-router.get('/api/phones', middleAuth, phonesController.findPhone);
-router.put('/api/phones', middleAuth, phonesController.updatePhone);
+router.post('/api/phones', middleAuth, phonesController.createPhone);
+router.get('/api/phones', middleAuth, phonesController.findPhoneByUser);
 router.delete('/api/phones', middleAuth, phonesController.deletePhone);
 
 module.exports = router;

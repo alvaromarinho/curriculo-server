@@ -16,7 +16,7 @@ module.exports = (req, res, next) => {
         if(schema !== 'Bearer') return next({ httpStatusCode: 400, responseMessage: 'authorization header not allowed' });
 
         jwt.verify(token, json.secret, (err, decoded) => {
-            if (err) return next({ httpStatusCode: 400, responseMessage: err });
+            if (err) return next({ httpStatusCode: 400, responseMessage: err.message });
 
             req.userId = decoded.id;
             return next();
