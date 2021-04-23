@@ -38,7 +38,7 @@ class UserModel {
         if (!user) return;
 
         user.phones = await phoneModel.findPhonesByUserId(user.id);
-        user.socialNetworks = await socialNetworkModel.findSocialNetworkByUserId(user.id);
+        user.socialNetworks = await socialNetworkModel.findSocialNetworksByUserId(user.id);
         return withPass ? { user: new User(user), userPassword: user.password } : new User(user);
     }
 
@@ -89,7 +89,7 @@ class UserModel {
             }
         }
 
-        user.socialNetworks = await socialNetworkModel.findSocialNetworkByUserId(req.userId);
+        user.socialNetworks = await socialNetworkModel.findSocialNetworksByUserId(req.userId);
         user.phones = await phoneModel.findPhonesByUserId(req.userId);
         return new User(user);
     }

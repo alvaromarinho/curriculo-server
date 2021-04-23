@@ -3,7 +3,6 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
 const UserModel = require('../models/UserModel');
-
 const userModel = new UserModel();
 
 const auth = async (req, res, next) => {

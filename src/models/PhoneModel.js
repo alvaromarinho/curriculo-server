@@ -22,10 +22,7 @@ class PhoneModel {
     }
 
     async deletePhone(filter) {
-        const result = await this.model.execute(sqlFunc.DELETE, null, filter);
-        if (!result) return;
-
-        return result.affectedRows;
+        return await this.model.execute(sqlFunc.DELETE, null, filter);
     }
 }
 

@@ -14,7 +14,7 @@ class SocialNetworkModel {
         return new SocialNetwork(socialNetwork);
     }
 
-    async findSocialNetworkByUserId(userId) {
+    async findSocialNetworksByUserId(userId) {
         const socialNetworks = await this.model.execute(sqlFunc.SELECT, null, { user_id: userId });
         if (!socialNetworks) return;
 
@@ -30,10 +30,7 @@ class SocialNetworkModel {
     }
 
     async deleteSocialNetwork(filter) {
-        const result = await this.model.execute(sqlFunc.DELETE, null, filter);
-        if (!result) return;
-
-        return result.affectedRows;
+        return await this.model.execute(sqlFunc.DELETE, null, filter);
     }
 }
 
