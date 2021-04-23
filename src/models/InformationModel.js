@@ -21,7 +21,7 @@ class InformationModel {
         return Array.isArray(informations) ? informations.map((res) => new Information(res)) : new Information(informations);
     }
 
-    async updateInformation(obj) {   
+    async updateInformation(obj) {
         await this.model.execute(sqlFunc.UPDATE, new Information(obj).toDb(), { id: obj.id });
         const information = await this.model.execute(sqlFunc.SELECT, null, { id: obj.id });
         if (!information) return;

@@ -12,16 +12,22 @@ class Model {
         this.table = table;
     }
 
-    async execute(operation, setObject, whereObject, whereConnector = 'AND') {
+    async execute(operation, setObject, whereObject = '1=1', whereConnector = 'AND') {
         try {
-            const where = whereObject ? Object.keys(whereObject).map((key) => `${key} = '${whereObject[key]}'`).join(` ${whereConnector} `) : '1=1';
+            const where = typeof whereObject === 'object'
+                ? Object.keys(whereObject).map((key) => `${key} = '${whereObject[key]}'`).join(` ${whereConnector} `)
+                : whereObject;
+
             switch (operation) {
                 case sqlFunc.SELECT:
                     const res = await connection.query('SELECT * FROM ?? WHERE ?', [this.table, { toSqlString: () => where }]);
                     return res.length > 1 ? res : res[0];
-                case sqlFunc.INSERT: return await connection.query('INSERT INTO ?? SET ?', [this.table, setObject]);
-                case sqlFunc.UPDATE: return await connection.query('UPDATE ?? SET ? WHERE ?', [this.table, setObject, { toSqlString: () => where }]);
-                case sqlFunc.DELETE: return await connection.query('DELETE FROM ?? WHERE ?', [this.table, { toSqlString: () => where }]);
+                case sqlFunc.INSERT:
+                    return await connection.query('INSERT INTO ?? SET ?', [this.table, setObject]);
+                case sqlFunc.UPDATE:
+                    return await connection.query('UPDATE ?? SET ? WHERE ?', [this.table, setObject, { toSqlString: () => where }]);
+                case sqlFunc.DELETE:
+                    return await connection.query('DELETE FROM ?? WHERE ?', [this.table, { toSqlString: () => where }]);
             }
         } catch (error) {
             console.log('[erro in SQL]', error.sql || error)

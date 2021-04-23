@@ -2,7 +2,7 @@ const mysql = require('mysql');
 const util = require('util');
 
 const con = mysql.createConnection({
-    hots: "localhost",
+    hots: 'localhost',
     user: 'root',
     password: 'root',
     database: 'alvin'
@@ -10,7 +10,7 @@ const con = mysql.createConnection({
 
 con.connect((err) => {
     if (err) throw err;
-    console.log("DB Connected!\n");
+    console.log('DB Connected!\n');
 });
 
 module.exports = {

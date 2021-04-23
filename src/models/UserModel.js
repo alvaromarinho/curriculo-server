@@ -1,11 +1,14 @@
 const { Model, sqlFunc } = require('./Model');
-const PhoneModel = require('./PhoneModel');
-const SocialNetworkModel = require('./SocialNetworkModel');
 const ImageHelper = require('../helpers/ImageHelper');
 const bcrypt = require('bcrypt');
 
+const PhoneModel = require('./PhoneModel');
+const SocialNetworkModel = require('./SocialNetworkModel');
+const InformationModel = require('./InformationModel');
+
 const phoneModel = new PhoneModel();
 const socialNetworkModel = new SocialNetworkModel();
+const informationModel = new InformationModel();
 
 class UserModel {
 
@@ -53,13 +56,13 @@ class UserModel {
             const toAdd = [];
 
             req.body.phones.map((phone) => {
-                if(phone.id)
+                if (phone.id)
                     toNotDelete.push(phone.id.toString())
                 else
                     toAdd.push(phone)
             })
 
-            await phoneModel.deletePhone({ toSqlString: () => `id NOT IN (${toNotDelete})` });
+            await phoneModel.deletePhone(`id NOT IN (${toNotDelete})`);
             for (const phone of toAdd) {
                 await phoneModel.createPhone({ number: phone.number, userId: req.userId });
             }
@@ -72,7 +75,7 @@ class UserModel {
             const toUpdate = [];
 
             req.body.socialNetworks.map((socialNetwork) => {
-                if(socialNetwork.id) {
+                if (socialNetwork.id) {
                     toNotDelete.push(socialNetwork.id.toString())
                     toUpdate.push(socialNetwork)
                 } else {
@@ -80,7 +83,7 @@ class UserModel {
                 }
             })
 
-            await socialNetworkModel.deleteSocialNetwork({ toSqlString: () => `id NOT IN (${toNotDelete})` });
+            await socialNetworkModel.deleteSocialNetwork(`id NOT IN (${toNotDelete})`);
             for (const socialNetwork of toUpdate) {
                 await socialNetworkModel.updateSocialNetwork(socialNetwork);
             }
@@ -100,6 +103,8 @@ class UserModel {
 
         ImageHelper.deleteFolder(user.email);
         await phoneModel.deletePhone({ user_id: id });
+        await socialNetworkModel.deleteSocialNetwork({ user_id: id });
+        await informationModel.deleteInformation({ user_id: id });
         return await this.model.execute(sqlFunc.DELETE, null, { id });
     }
 }

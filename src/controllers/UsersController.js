@@ -19,7 +19,7 @@ const auth = async (req, res, next) => {
     }
 }
 
-const createUser = async (req, res, next) => {
+const create = async (req, res, next) => {
     try {
         const user = await userModel.createUser(req);
         res.status(200).json(user)
@@ -28,7 +28,7 @@ const createUser = async (req, res, next) => {
     }
 }
 
-const findUser = async (req, res, next) => {
+const find = async (req, res, next) => {
     try {
         const user = await userModel.findUserBy({ id: req.userId });
         res.status(200).json(user)
@@ -37,7 +37,7 @@ const findUser = async (req, res, next) => {
     }
 }
 
-const updateUser = async (req, res, next) => {
+const update = async (req, res, next) => {
     try {
         const user = await userModel.updateUser(req);
         res.status(200).json(user)
@@ -46,7 +46,7 @@ const updateUser = async (req, res, next) => {
     }
 }
 
-const deleteUser = async (req, res, next) => {
+const remove = async (req, res, next) => {
     try {
         const result = await userModel.deleteUser(req.userId)
         res.status(200).json(`${result.affectedRows} usuário(s) deletado(s)`);
@@ -55,4 +55,4 @@ const deleteUser = async (req, res, next) => {
     }
 }
 
-module.exports = { auth, createUser, findUser, updateUser, deleteUser }
+module.exports = { auth, create, find, update, remove }

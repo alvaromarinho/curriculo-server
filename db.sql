@@ -2,11 +2,13 @@ CREATE TABLE `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
-  `img_url` varchar(255) DEFAULT '/assets/img/default_user.png',
-  `city` varchar(100) NOT NULL,
-  `uf` varchar(20) NOT NULL,
   `password` varchar(255) NOT NULL,
   `description` longtext NOT NULL,
+  `city` varchar(100) NOT NULL,
+  `uf` varchar(20) NOT NULL,
+  `img_url` varchar(255) DEFAULT '/assets/img/default_user.png',
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email_UNIQUE` (`email`));
 
@@ -14,6 +16,7 @@ CREATE TABLE `phones` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `number` VARCHAR(45) NOT NULL,
   `user_id` INT(11) NOT NULL,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   INDEX `fk_phones_user_idx` (`user_id` ASC),
   CONSTRAINT `fk_phones_user`
@@ -28,6 +31,8 @@ CREATE TABLE `social_networks` (
   `icon` VARCHAR(45) NOT NULL,
   `url` VARCHAR(255) NOT NULL,
   `user_id` INT(11) NOT NULL,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   INDEX `fk_social_networks_user_idx` (`user_id` ASC),
   CONSTRAINT `fk_social_networks_user`
@@ -45,6 +50,8 @@ CREATE TABLE `informations` (
   `start` DATETIME NOT NULL,
   `end` DATETIME NULL,
   `user_id` INT(11) NOT NULL,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   INDEX `fk_informations_user_idx` (`user_id` ASC),
   CONSTRAINT `fk_informations_user`
@@ -57,6 +64,8 @@ CREATE TABLE `skill_groups` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
   `user_id` INT(11) NOT NULL,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   INDEX `fk_skill_groups_user_idx` (`user_id` ASC),
   CONSTRAINT `fk_skill_groups_user`
@@ -70,6 +79,8 @@ CREATE TABLE `skills` (
   `name` VARCHAR(45) NOT NULL,
   `icon` VARCHAR(45) NOT NULL,
   `group_id` INT(11) NOT NULL,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   INDEX `fk_skills_skill_group_idx` (`group_id` ASC),
   CONSTRAINT `fk_skills_skill_group`
@@ -82,6 +93,8 @@ CREATE TABLE `portfolios` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
   `user_id` INT(11) NOT NULL,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   INDEX `fk_portfolios_user_idx` (`user_id` ASC),
   CONSTRAINT `fk_portfolios_user`
@@ -97,6 +110,8 @@ CREATE TABLE `projects` (
   `description` LONGTEXT NULL,
   `url` VARCHAR(255) NULL,
   `portfolio_id` INT(11) NOT NULL,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   INDEX `fk_projects_portfolio_idx` (`portfolio_id` ASC),
   CONSTRAINT `fk_projects_portfolio`
@@ -110,6 +125,8 @@ CREATE TABLE `project_images` (
   `name` VARCHAR(255) NULL,
   `url` VARCHAR(255) NOT NULL,
   `project_id` INT(11) NOT NULL,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   INDEX `fk_project_images_project_idx` (`project_id` ASC),
   CONSTRAINT `fk_project_images_project`

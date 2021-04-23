@@ -21,7 +21,7 @@ class SocialNetworkModel {
         return Array.isArray(socialNetworks) ? socialNetworks.map((res) => new SocialNetwork(res)) : new SocialNetwork(socialNetworks);
     }
 
-    async updateSocialNetwork(obj) {   
+    async updateSocialNetwork(obj) {
         await this.model.execute(sqlFunc.UPDATE, new SocialNetwork(obj).toDb(), { id: obj.id });
         const socialNetwork = await this.model.execute(sqlFunc.SELECT, null, { id: obj.id });
         if (!socialNetwork) return;
