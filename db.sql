@@ -10,7 +10,7 @@ CREATE TABLE `users` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `email_UNIQUE` (`email`));
 
-CREATE TABLE `alvin`.`phones` (
+CREATE TABLE `phones` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `number` VARCHAR(45) NOT NULL,
   `user_id` INT(11) NOT NULL,
@@ -18,24 +18,25 @@ CREATE TABLE `alvin`.`phones` (
   INDEX `fk_phones_user_idx` (`user_id` ASC),
   CONSTRAINT `fk_phones_user`
     FOREIGN KEY (`user_id`)
-    REFERENCES `alvin`.`users` (`id`)
+    REFERENCES `users` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
-CREATE TABLE `alvin`.`social_networks` (
+CREATE TABLE `social_networks` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
   `icon` VARCHAR(45) NOT NULL,
+  `url` VARCHAR(255) NOT NULL,
   `user_id` INT(11) NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_social_networks_user_idx` (`user_id` ASC),
   CONSTRAINT `fk_social_networks_user`
     FOREIGN KEY (`user_id`)
-    REFERENCES `alvin`.`users` (`id`)
+    REFERENCES `users` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
-CREATE TABLE `alvin`.`informations` (
+CREATE TABLE `informations` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `title` VARCHAR(255) NOT NULL,
   `subtitle` VARCHAR(255) NULL,
@@ -48,11 +49,11 @@ CREATE TABLE `alvin`.`informations` (
   INDEX `fk_informations_user_idx` (`user_id` ASC),
   CONSTRAINT `fk_informations_user`
     FOREIGN KEY (`user_id`)
-    REFERENCES `alvin`.`users` (`id`)
+    REFERENCES `users` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
-CREATE TABLE `alvin`.`skill_groups` (
+CREATE TABLE `skill_groups` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
   `user_id` INT(11) NOT NULL,
@@ -60,11 +61,11 @@ CREATE TABLE `alvin`.`skill_groups` (
   INDEX `fk_skill_groups_user_idx` (`user_id` ASC),
   CONSTRAINT `fk_skill_groups_user`
     FOREIGN KEY (`user_id`)
-    REFERENCES `alvin`.`users` (`id`)
+    REFERENCES `users` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
-CREATE TABLE `alvin`.`skills` (
+CREATE TABLE `skills` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
   `icon` VARCHAR(45) NOT NULL,
@@ -73,11 +74,11 @@ CREATE TABLE `alvin`.`skills` (
   INDEX `fk_skills_skill_group_idx` (`group_id` ASC),
   CONSTRAINT `fk_skills_skill_group`
     FOREIGN KEY (`group_id`)
-    REFERENCES `alvin`.`skill_groups` (`id`)
+    REFERENCES `skill_groups` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
-CREATE TABLE `alvin`.`portfolios` (
+CREATE TABLE `portfolios` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
   `user_id` INT(11) NOT NULL,
@@ -85,11 +86,11 @@ CREATE TABLE `alvin`.`portfolios` (
   INDEX `fk_portfolios_user_idx` (`user_id` ASC),
   CONSTRAINT `fk_portfolios_user`
     FOREIGN KEY (`user_id`)
-    REFERENCES `alvin`.`users` (`id`)
+    REFERENCES `users` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
-CREATE TABLE `alvin`.`projects` (
+CREATE TABLE `projects` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `title` VARCHAR(255) NOT NULL,
   `subtitle` VARCHAR(255) NULL,
@@ -100,11 +101,11 @@ CREATE TABLE `alvin`.`projects` (
   INDEX `fk_projects_portfolio_idx` (`portfolio_id` ASC),
   CONSTRAINT `fk_projects_portfolio`
     FOREIGN KEY (`portfolio_id`)
-    REFERENCES `alvin`.`portfolios` (`id`)
+    REFERENCES `portfolios` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
-CREATE TABLE `alvin`.`project_images` (
+CREATE TABLE `project_images` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NULL,
   `url` VARCHAR(255) NOT NULL,
@@ -113,6 +114,6 @@ CREATE TABLE `alvin`.`project_images` (
   INDEX `fk_project_images_project_idx` (`project_id` ASC),
   CONSTRAINT `fk_project_images_project`
     FOREIGN KEY (`project_id`)
-    REFERENCES `alvin`.`projects` (`id`)
+    REFERENCES `projects` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
