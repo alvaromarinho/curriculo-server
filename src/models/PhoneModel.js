@@ -15,10 +15,10 @@ class PhoneModel {
     }
 
     async findPhonesByUserId(userId) {
-        const results = await this.model.execute(sqlFunc.SELECT, null, { user_id: userId });
-        if (!results) return;
+        const phones = await this.model.execute(sqlFunc.SELECT, null, { user_id: userId });
+        if (!phones) return;
 
-        return Array.isArray(results) ? results.map((res) => new Phone(res)) : new Phone(results);
+        return Array.isArray(phones) ? phones.map((res) => new Phone(res)) : new Phone(phones);
     }
 
     async deletePhone(filter) {

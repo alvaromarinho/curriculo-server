@@ -4,8 +4,6 @@ const cors = require("cors");
 const multiParty = require('connect-multiparty');
 const bodyParser = require('body-parser');
 
-// const { databaseUrl, env } = require("./config/configs")
-
 const app = express();
 
 app.use(bodyParser.json());
@@ -16,7 +14,7 @@ app.use(cors());
 app.use(routes);
 
 app.use((err, req, res, next) => {
-    console.log(`[error] ${req.method} => ${req.url}`);
+    console.log(`${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()} [error] ${req.method} => ${req.url}`);
     res.status(err.httpStatusCode || 500).json(err.responseMessage);
 });
 
