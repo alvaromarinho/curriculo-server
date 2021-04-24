@@ -13,10 +13,8 @@ app.use(multiParty());
 app.use(cors());
 app.use(routes);
 
-app.use((err, req, res, next) => {
-    console.log(`${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()} [error] ${req.method} => ${req.url}`);
-    res.status(err.httpStatusCode || 500).json(err.responseMessage);
-});
+// ErrorHandler
+app.use((err, req, res, next) => res.status(err.httpStatusCode || 500).json(err.responseMessage));
 
 app.listen(3001, () => {
     console.log(`server runing in port: 3001\n`);

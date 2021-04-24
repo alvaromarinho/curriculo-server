@@ -5,10 +5,12 @@ const bcrypt = require('bcrypt');
 const PhoneModel = require('./PhoneModel');
 const SocialNetworkModel = require('./SocialNetworkModel');
 const InformationModel = require('./InformationModel');
+const PortfolioModel = require('./PortfolioModel');
 
 const phoneModel = new PhoneModel();
 const socialNetworkModel = new SocialNetworkModel();
 const informationModel = new InformationModel();
+const portfolioModel = new PortfolioModel();
 
 class UserModel {
 
@@ -105,6 +107,7 @@ class UserModel {
         await phoneModel.deletePhone({ user_id: id });
         await socialNetworkModel.deleteSocialNetwork({ user_id: id });
         await informationModel.deleteInformation({ user_id: id });
+        await portfolioModel.deletePortfolio({ user_id: id });
         return await this.model.execute(sqlFunc.DELETE, null, { id });
     }
 }

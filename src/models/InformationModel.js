@@ -43,6 +43,7 @@ class Information {
         this.type = obj.type;
         this.start = obj.start;
         this.end = obj.end;
+        this.userId = obj.userId || obj.user_id;
     }
 
     toDb(userId) {

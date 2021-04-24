@@ -1,10 +1,13 @@
+const ProjectModel = require('../models/ProjectModel');
 const PortfolioModel = require('../models/PortfolioModel');
+
+const projectModel = new ProjectModel();
 const portfolioModel = new PortfolioModel();
 
 const create = async (req, res, next) => {
     try {
-        const portfolio = await portfolioModel.createPortfolio(req);
-        res.status(200).json(portfolio)
+        const project = await projectModel.createProject({ ...req.body, portfolioId: req.params.portfolioId });
+        res.status(200).json(project)
     } catch (error) {
         next({ httpStatusCode: 400, responseMessage: error.sqlMessage || error })
     }
@@ -12,8 +15,8 @@ const create = async (req, res, next) => {
 
 const find = async (req, res, next) => {
     try {
-        const portfolio = await portfolioModel.findPortfoliosBy({ user_id: req.userId });
-        res.status(200).json(portfolio)
+        const project = await projectModel.findProjectsBy({ id: req.params.projectId });
+        res.status(200).json(project)
     } catch (error) {
         next({ httpStatusCode: 400, responseMessage: error.sqlMessage || error })
     }
@@ -21,8 +24,8 @@ const find = async (req, res, next) => {
 
 const update = async (req, res, next) => {
     try {
-        const portfolio = await portfolioModel.updatePortfolio({ ...req.body, id: req.params.portfolioId });
-        res.status(200).json(portfolio)
+        const project = await projectModel.updateProject({ ...req.body, id: req.params.projectId });
+        res.status(200).json(project)
     } catch (error) {
         next({ httpStatusCode: 400, responseMessage: error.sqlMessage || error })
     }
@@ -30,18 +33,11 @@ const update = async (req, res, next) => {
 
 const remove = async (req, res, next) => {
     try {
-        const result = await portfolioModel.deletePortfolio(req.params.portfolioId)
+        const result = await projectModel.deleteProject({ id: req.params.projectId })
         res.status(200).json(`${result.affectedRows} registro(s) deletado(s)`);
     } catch (error) {
         next({ httpStatusCode: 400, responseMessage: error.sqlMessage || error })
     }
 }
 
-const resourceOwner = async (req, res, next) => {
-    const portfolio = await portfolioModel.findPortfoliosBy({ id: req.params.portfolioId });
-    if (req.userId !== portfolio.userId) 
-        return next({ httpStatusCode: 403 });
-    return next();
-}
-
-module.exports = { create, find, update, remove, resourceOwner }
+module.exports = { create, find, update, remove }
