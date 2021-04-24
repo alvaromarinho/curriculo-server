@@ -5,6 +5,7 @@ const middleAuth = require("./middlewares/Auth");
 const ImageHelper = require('./helpers/ImageHelper');
 const usersController = require('./controllers/UsersController');
 const informationsController = require('./controllers/InformationsController');
+const portfoliosController = require('./controllers/PortfoliosController');
 
 // router.get('/api/site/:id', sitesController.getAll);
 router.post('/api/auth', usersController.auth);
@@ -22,5 +23,11 @@ router.get('/api/informations', middleAuth, informationsController.find);
 router.get('/api/informations/:type', middleAuth, informationsController.findByType);
 router.put('/api/informations/:id', middleAuth, informationsController.update);
 router.delete('/api/informations/:id', middleAuth, informationsController.remove);
+
+// portfolios
+router.post('/api/portfolios', middleAuth, portfoliosController.create);
+router.get('/api/portfolios', middleAuth, portfoliosController.find);
+router.put('/api/portfolios/:id', middleAuth, portfoliosController.update);
+router.delete('/api/portfolios/:id', middleAuth, portfoliosController.remove);
 
 module.exports = router;

@@ -60,35 +60,6 @@ CREATE TABLE `informations` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
-CREATE TABLE `skill_groups` (
-  `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(45) NOT NULL,
-  `user_id` INT(11) NOT NULL,
-  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  INDEX `fk_skill_groups_user_idx` (`user_id` ASC),
-  CONSTRAINT `fk_skill_groups_user`
-    FOREIGN KEY (`user_id`)
-    REFERENCES `users` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION);
-
-CREATE TABLE `skills` (
-  `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(45) NOT NULL,
-  `icon` VARCHAR(45) NOT NULL,
-  `group_id` INT(11) NOT NULL,
-  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  INDEX `fk_skills_skill_group_idx` (`group_id` ASC),
-  CONSTRAINT `fk_skills_skill_group`
-    FOREIGN KEY (`group_id`)
-    REFERENCES `skill_groups` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION);
-
 CREATE TABLE `portfolios` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
