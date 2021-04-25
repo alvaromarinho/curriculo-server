@@ -10,7 +10,7 @@ class PortfoliosModel {
     }
 
     async createPortfolio(req) {
-        const result = await this.model.execute(sqlFunc.INSERT, new Portfolio(req.body).toDb(req.userId));
+        const result = await this.model.execute(sqlFunc.INSERT, new Portfolio(req.body).toDb(req.user.id));
         const portfolio = await this.model.execute(sqlFunc.SELECT, null, { id: result.insertId });
         if (!portfolio) return;
 
@@ -40,9 +40,18 @@ class PortfoliosModel {
         return new Portfolio(portfolio);
     }
 
-    async deletePortfolio(id) {
-        await projectModel.deleteProject({ portfolio_id: id });
-        return await this.model.execute(sqlFunc.DELETE, null, { id });
+    async deletePortfolio(filter) {
+        const portfolios = await this.model.execute(sqlFunc.SELECT, null, filter);
+        const portfoliosToDeleteId = []
+
+        if (Array.isArray(portfolios)) {
+            portfolios.map((p) => portfoliosToDeleteId.push(p.id));
+        } else {
+            portfoliosToDeleteId.push(portfolios.id)
+        }
+
+        await projectModel.deleteProject(`portfolio_id IN (${portfoliosToDeleteId})`);
+        return await this.model.execute(sqlFunc.DELETE, null, filter);
     }
 }
 

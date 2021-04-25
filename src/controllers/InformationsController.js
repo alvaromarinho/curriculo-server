@@ -12,7 +12,7 @@ const create = async (req, res, next) => {
 
 const find = async (req, res, next) => {
     try {
-        const information = await informationModel.findInformationsBy({ user_id: req.userId });
+        const information = await informationModel.findInformationsBy({ user_id: req.user.id });
         res.status(200).json(information)
     } catch (error) {
         next({ httpStatusCode: 400, responseMessage: error.sqlMessage || error })
@@ -40,7 +40,7 @@ const remove = async (req, res, next) => {
 
 const resourceOwner = async (req, res, next) => {
     const information = await informationModel.findInformationsBy({ id: req.params.informationId });
-    if (req.userId !== information.userId) 
+    if (req.user.id !== information.userId) 
         return next({ httpStatusCode: 403 });
     return next();
 }

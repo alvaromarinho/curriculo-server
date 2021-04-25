@@ -19,7 +19,7 @@ class UserModel {
     }
 
     async createUser(req) {
-        if (req.files) req.body.imgUrl = ImageHelper.upload(req.body.email, req.files);
+        if (req.files) req.body.image = ImageHelper.upload(req.body.email, req.files.image);
 
         const result = await this.model.execute(sqlFunc.INSERT, new User(req.body).toDb(req.body.password));
         const user = await this.model.execute(sqlFunc.SELECT, null, { id: result.insertId });
@@ -48,8 +48,8 @@ class UserModel {
     }
 
     async updateUser(req) {
-        await this.model.execute(sqlFunc.UPDATE, new User(req.body).toDb(req.body.password), { id: req.userId });
-        const user = await this.model.execute(sqlFunc.SELECT, null, { id: req.userId });
+        await this.model.execute(sqlFunc.UPDATE, new User(req.body).toDb(req.body.password), { id: req.user.id });
+        const user = await this.model.execute(sqlFunc.SELECT, null, { id: req.user.id });
         if (!user) return;
 
         // PHONES
@@ -66,7 +66,7 @@ class UserModel {
 
             await phoneModel.deletePhone(`id NOT IN (${toNotDelete})`);
             for (const phone of toAdd) {
-                await phoneModel.createPhone({ number: phone.number, userId: req.userId });
+                await phoneModel.createPhone({ number: phone.number, userId: req.user.id });
             }
         }
 
@@ -90,25 +90,30 @@ class UserModel {
                 await socialNetworkModel.updateSocialNetwork(socialNetwork);
             }
             for (const socialNetwork of toAdd) {
-                await socialNetworkModel.createSocialNetwork({ ...socialNetwork, userId: req.userId });
+                await socialNetworkModel.createSocialNetwork({ ...socialNetwork, userId: req.user.id });
             }
         }
 
-        user.socialNetworks = await socialNetworkModel.findSocialNetworksByUserId(req.userId);
-        user.phones = await phoneModel.findPhonesByUserId(req.userId);
+        user.socialNetworks = await socialNetworkModel.findSocialNetworksByUserId(req.user.id);
+        user.phones = await phoneModel.findPhonesByUserId(req.user.id);
         return new User(user);
     }
 
     async deleteUser(id) {
-        const user = await this.model.execute(sqlFunc.SELECT, null, { id });
-        if (!user) return;
-
-        ImageHelper.deleteFolder(user.email);
-        await phoneModel.deletePhone({ user_id: id });
-        await socialNetworkModel.deleteSocialNetwork({ user_id: id });
-        await informationModel.deleteInformation({ user_id: id });
-        await portfolioModel.deletePortfolio({ user_id: id });
-        return await this.model.execute(sqlFunc.DELETE, null, { id });
+        try {
+            
+            const user = await this.model.execute(sqlFunc.SELECT, null, { id });
+            if (!user) return;
+    
+            ImageHelper.deleteFolder(user.email);
+            await phoneModel.deletePhone({ user_id: id });
+            await socialNetworkModel.deleteSocialNetwork({ user_id: id });
+            await informationModel.deleteInformation({ user_id: id });
+            await portfolioModel.deletePortfolio({ user_id: id });
+            return await this.model.execute(sqlFunc.DELETE, null, { id });
+        } catch (error) {
+            console.log(error);
+        }
     }
 }
 
@@ -117,7 +122,7 @@ class User {
         this.id = obj.id;
         this.name = obj.name;
         this.email = obj.email;
-        this.imgUrl = obj.imgUrl || obj.img_url;
+        this.image = obj.image;
         this.city = obj.city;
         this.uf = obj.uf;
         this.description = obj.description;
@@ -129,7 +134,7 @@ class User {
         return JSON.parse(JSON.stringify({
             name: this.name,
             email: this.email,
-            img_url: this.imgUrl,
+            image: this.image,
             city: this.city,
             uf: this.uf,
             password: password && bcrypt.hashSync(password, bcrypt.genSaltSync()),

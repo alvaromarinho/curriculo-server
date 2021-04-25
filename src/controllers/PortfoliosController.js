@@ -12,7 +12,7 @@ const create = async (req, res, next) => {
 
 const find = async (req, res, next) => {
     try {
-        const portfolio = await portfolioModel.findPortfoliosBy({ user_id: req.userId });
+        const portfolio = await portfolioModel.findPortfoliosBy({ user_id: req.user.id });
         res.status(200).json(portfolio)
     } catch (error) {
         next({ httpStatusCode: 400, responseMessage: error.sqlMessage || error })
@@ -39,7 +39,7 @@ const remove = async (req, res, next) => {
 
 const resourceOwner = async (req, res, next) => {
     const portfolio = await portfolioModel.findPortfoliosBy({ id: req.params.portfolioId });
-    if (req.userId !== portfolio.userId) 
+    if (req.user.id !== portfolio.userId) 
         return next({ httpStatusCode: 403 });
     return next();
 }

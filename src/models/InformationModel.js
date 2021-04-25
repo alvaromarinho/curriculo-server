@@ -7,7 +7,7 @@ class InformationModel {
     }
 
     async createInformation(req) {
-        const result = await this.model.execute(sqlFunc.INSERT, new Information(req.body).toDb(req.userId));
+        const result = await this.model.execute(sqlFunc.INSERT, new Information(req.body).toDb(req.user.id));
         const information = await this.model.execute(sqlFunc.SELECT, null, { id: result.insertId });
         if (!information) return;
 

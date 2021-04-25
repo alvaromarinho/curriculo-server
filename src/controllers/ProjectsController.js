@@ -6,7 +6,7 @@ const portfolioModel = new PortfolioModel();
 
 const create = async (req, res, next) => {
     try {
-        const project = await projectModel.createProject({ ...req.body, portfolioId: req.params.portfolioId });
+        const project = await projectModel.createProject(req);
         res.status(200).json(project)
     } catch (error) {
         next({ httpStatusCode: 400, responseMessage: error.sqlMessage || error })

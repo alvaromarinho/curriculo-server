@@ -14,8 +14,7 @@ module.exports = (req, res, next) => {
 
         jwt.verify(token, json.secret, (err, decoded) => {
             if (err) return next({ httpStatusCode: 401, responseMessage: err.message });
-
-            req.userId = decoded.id;
+            req.user = { id: decoded.id, email: decoded.email }
             return next();
         });
     } catch (e) {

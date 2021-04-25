@@ -12,7 +12,7 @@ const auth = async (req, res, next) => {
         if (!user) return next({ httpStatusCode: 404 });
         if (!bcrypt.compareSync(password, userPassword)) return next({ httpStatusCode: 401 });
 
-        const token = jwt.sign({ id: user.id }, json.secret, { expiresIn: 86400 });
+        const token = jwt.sign({ id: user.id, email: user.email, name: user.name }, json.secret, { expiresIn: 86400 });
         res.status(202).json({ user, token });
     } catch (error) {
         next({ httpStatusCode: 400, responseMessage: error.sqlMessage || error })
@@ -30,7 +30,7 @@ const create = async (req, res, next) => {
 
 const find = async (req, res, next) => {
     try {
-        const user = await userModel.findUserBy({ id: req.userId });
+        const user = await userModel.findUserBy({ id: req.user.id });
         res.status(200).json(user)
     } catch (error) {
         next({ httpStatusCode: 400, responseMessage: error.sqlMessage || error })
@@ -48,7 +48,7 @@ const update = async (req, res, next) => {
 
 const remove = async (req, res, next) => {
     try {
-        const result = await userModel.deleteUser(req.userId)
+        const result = await userModel.deleteUser(req.user.id)
         res.status(200).json(`${result.affectedRows} usuário(s) deletado(s)`);
     } catch (error) {
         next({ httpStatusCode: 400, responseMessage: error.sqlMessage || error })

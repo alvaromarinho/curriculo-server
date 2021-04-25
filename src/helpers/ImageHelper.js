@@ -20,10 +20,9 @@ class ImageHelper {
             if (!fs.existsSync(`${PATH_DESTINY}/${folder}`)) {
                 fs.mkdirSync(`${PATH_DESTINY}/${folder}`);
             }
-            if (file.imgUrl) {
-                const img = Array.isArray(file.imgUrl) ? file.imgUrl[0] : file.imgUrl;
+            if (file) {
                 const urlImg = `${new Date().getTime()}.png`;
-                fs.renameSync(img.path, `${PATH_DESTINY}/${folder}/${urlImg}`);
+                fs.renameSync(file.path, `${PATH_DESTINY}/${folder}/${urlImg}`);
                 return `${folder}/${urlImg}`;
             }
         } catch (error) {

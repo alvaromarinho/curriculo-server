@@ -6,7 +6,7 @@ CREATE TABLE `users` (
   `description` longtext NOT NULL,
   `city` varchar(100) NOT NULL,
   `uf` varchar(20) NOT NULL,
-  `img_url` varchar(255) DEFAULT '/assets/img/default_user.png',
+  `image` varchar(255) DEFAULT '/assets/img/default_user.png',
   `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
@@ -93,7 +93,6 @@ CREATE TABLE `projects` (
 
 CREATE TABLE `project_images` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(255) NULL,
   `url` VARCHAR(255) NOT NULL,
   `project_id` INT(11) NOT NULL,
   `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
