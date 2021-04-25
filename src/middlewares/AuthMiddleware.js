@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const json = require("../config/config.json");
+const CustomError = require('../models/CustomError');
 
 module.exports = (req, res, next) => {
     try {
@@ -17,10 +18,8 @@ module.exports = (req, res, next) => {
             req.user = { id: decoded.id, email: decoded.email }
             return next();
         });
-    } catch (e) {
-        console.log(e);
-        e.httpStatusCode = 401;
-        e.responseMessage = 'Invalid Token!';
-        next(e);
+    } catch (error) {
+        console.log(error);
+        next(new CustomError(401, 'Invalid Token'))
     }
 }

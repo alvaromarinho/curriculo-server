@@ -1,44 +1,44 @@
-const PortfolioModel = require('../models/PortfolioModel');
-const portfolioModel = new PortfolioModel();
+const portfolioDAO = require('../dao/PortfolioDAO');
+const CustomError = require('../models/CustomError');
 
 const create = async (req, res, next) => {
     try {
-        const portfolio = await portfolioModel.createPortfolio(req);
+        const portfolio = await portfolioDAO.createPortfolio(req);
         res.status(200).json(portfolio)
     } catch (error) {
-        next({ httpStatusCode: 400, responseMessage: error.sqlMessage || error })
+        next(new CustomError(error.httpStatusCode || 400, error.message || 'Error creating portfolio'))
     }
 }
 
 const find = async (req, res, next) => {
     try {
-        const portfolio = await portfolioModel.findPortfoliosBy({ user_id: req.user.id });
+        const portfolio = await portfolioDAO.findPortfoliosBy({ user_id: req.user.id });
         res.status(200).json(portfolio)
     } catch (error) {
-        next({ httpStatusCode: 400, responseMessage: error.sqlMessage || error })
+        next(new CustomError(error.httpStatusCode || 400, error.message || 'Error finding portfolio'))
     }
 }
 
 const update = async (req, res, next) => {
     try {
-        const portfolio = await portfolioModel.updatePortfolio({ ...req.body, id: req.params.portfolioId });
+        const portfolio = await portfolioDAO.updatePortfolio({ ...req.body, id: req.params.portfolioId });
         res.status(200).json(portfolio)
     } catch (error) {
-        next({ httpStatusCode: 400, responseMessage: error.sqlMessage || error })
+        next(new CustomError(error.httpStatusCode || 400, error.message || 'Error updating portfolio'))
     }
 }
 
 const remove = async (req, res, next) => {
     try {
-        const result = await portfolioModel.deletePortfolio(req.params.portfolioId)
+        const result = await portfolioDAO.deletePortfolio(req.params.portfolioId)
         res.status(200).json(`${result.affectedRows} registro(s) deletado(s)`);
     } catch (error) {
-        next({ httpStatusCode: 400, responseMessage: error.sqlMessage || error })
+        next(new CustomError(error.httpStatusCode || 400, error.message || 'Error deleting portfolio'))
     }
 }
 
 const resourceOwner = async (req, res, next) => {
-    const portfolio = await portfolioModel.findPortfoliosBy({ id: req.params.portfolioId });
+    const [portfolio] = await portfolioDAO.findPortfoliosBy({ id: req.params.portfolioId });
     if (req.user.id !== portfolio.userId) 
         return next({ httpStatusCode: 403 });
     return next();

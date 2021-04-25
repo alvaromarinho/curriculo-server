@@ -1,42 +1,39 @@
-const ProjectModel = require('../models/ProjectModel');
-const PortfolioModel = require('../models/PortfolioModel');
-
-const projectModel = new ProjectModel();
-const portfolioModel = new PortfolioModel();
+const projectDAO = require('../dao/ProjectDAO');
+const CustomError = require('../models/CustomError');
 
 const create = async (req, res, next) => {
     try {
-        const project = await projectModel.createProject(req);
+        const project = await projectDAO.createProject(req);
         res.status(200).json(project)
     } catch (error) {
-        next({ httpStatusCode: 400, responseMessage: error.sqlMessage || error })
+        next(new CustomError(error.httpStatusCode || 400, error.message || 'Error creating project'))
     }
 }
 
 const find = async (req, res, next) => {
     try {
-        const project = await projectModel.findProjectsBy({ id: req.params.projectId });
+        const project = await projectDAO.findProjectsBy({ id: req.params.projectId });
         res.status(200).json(project)
     } catch (error) {
-        next({ httpStatusCode: 400, responseMessage: error.sqlMessage || error })
+        next(new CustomError(error.httpStatusCode || 400, error.message || 'Error finding project'))
     }
 }
 
 const update = async (req, res, next) => {
     try {
-        const project = await projectModel.updateProject({ ...req.body, id: req.params.projectId });
+        const project = await projectDAO.updateProject({ ...req.body, id: req.params.projectId });
         res.status(200).json(project)
     } catch (error) {
-        next({ httpStatusCode: 400, responseMessage: error.sqlMessage || error })
+        next(new CustomError(error.httpStatusCode || 400, error.message || 'Error updating project'))
     }
 }
 
 const remove = async (req, res, next) => {
     try {
-        const result = await projectModel.deleteProject({ id: req.params.projectId })
+        const result = await projectDAO.deleteProject({ id: req.params.projectId })
         res.status(200).json(`${result.affectedRows} registro(s) deletado(s)`);
     } catch (error) {
-        next({ httpStatusCode: 400, responseMessage: error.sqlMessage || error })
+        next(new CustomError(error.httpStatusCode || 400, error.message || 'Error deleting project'))
     }
 }
 

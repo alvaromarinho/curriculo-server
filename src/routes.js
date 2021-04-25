@@ -14,12 +14,12 @@ router.use((req, res, next) => {
     next();
 });
 
-// router.get('/api/site/:id', sitesController.getAll);
 router.post('/api/auth', usersController.auth);
+// router.get('/api/site/:id', sitesController.getAll);
 
 // image
 router.get('/api/image', (req, res) => ImageHelper.get(req, res));
-// router.delete('/api/image', (req, res) => ImageHelper.get(req, res));
+// router.delete('/api/image', (req, res) => ImageHelper.deleteFile(req, res));
 
 // users
 router.post('/api/user', usersController.create);
