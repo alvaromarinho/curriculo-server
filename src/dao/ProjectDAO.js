@@ -11,7 +11,7 @@ class ProjectDAO extends DAO {
     async createProject(req) {
         const result = await this.execute(sql.INSERT, new Project(req.body).toDb(req.params.portfolioId));
         const [project] = await this.execute(sql.SELECT, null, { id: result.insertId });
-        if (!project) return;
+        if (!project) throw new CustomError(404, 'Error creating project');
 
         if (req.files) {
             project.images = [];
@@ -25,7 +25,7 @@ class ProjectDAO extends DAO {
 
     async findProjectsBy(filter) {
         const projects = await this.execute(sql.SELECT, null, filter);
-        if (!projects) return;
+        if (!projects) throw new CustomError(404, 'Not found');
 
         for (const project of projects) {
             project.images = await projectImagesDAO.findProjectImagesBy({ project_id: project.id }) || [];
@@ -37,7 +37,7 @@ class ProjectDAO extends DAO {
     async updateProject(obj) {
         await this.execute(sql.UPDATE, new Project(obj).toDb(), { id: obj.id });
         const [project] = await this.execute(sql.SELECT, null, { id: obj.id });
-        if (!project) return;
+        if (!project) throw new CustomError(404, 'Not found');;
 
         project.images = await projectImagesDAO.findProjectImagesBy({ project_id: project.id }) || [];
         return new Project(project);

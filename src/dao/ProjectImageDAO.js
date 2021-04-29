@@ -12,14 +12,14 @@ class ProjectImageDAO extends DAO {
         const obj = { url: ImageHelper.upload(folder, file), projectId }
         const result = await this.execute(sql.INSERT, new ProjectImage(obj).toDb(projectId));
         const [projectImage] = await this.execute(sql.SELECT, null, { id: result.insertId });
-        if (!projectImage) return;
+        if (!projectImage) throw new CustomError(404, 'Error creating project image');
 
         return new ProjectImage(projectImage);
     }
 
     async findProjectImagesBy(filter) {
         const projectImages = await this.execute(sql.SELECT, null, filter);
-        if (!projectImages) return;
+        if (!projectImages) throw new CustomError(404, 'Not found');
 
         return projectImages.map((res) => new ProjectImage(res));
     }
