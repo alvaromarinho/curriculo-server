@@ -16,5 +16,7 @@ USER node
 
 EXPOSE 3001
 
+ENV NODE_ENV=docker
+
 CMD [ "node", "src/server.js" ]
 

@@ -1,7 +1,7 @@
-require('dotenv').config({ path: process.env.NODE_ENV == "docker" ? ".env.docker" : ".env" });
-const express = require("express");
-const routes = require("./routes");
-const cors = require("cors");
+require('dotenv').config({ path: process.env.NODE_ENV === 'docker' ? '.env.docker' : '.env' });
+const express = require('express');
+const routes = require('./routes');
+const cors = require('cors');
 const multiParty = require('connect-multiparty');
 const bodyParser = require('body-parser');
 
@@ -18,5 +18,5 @@ app.use(routes);
 app.use((err, req, res, next) => res.status(err.httpStatusCode || 500).json(err.message));
 
 app.listen(process.env.SERVER_PORT, () => {
-    console.log(`server runing in port: ${process.env.SERVER_PORT}\n`);
+    console.log(`[${process.env.NODE_ENV || 'dev'}] server runing in port: ${process.env.SERVER_PORT}\n`);
 });

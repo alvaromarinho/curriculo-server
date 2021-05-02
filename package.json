@@ -4,7 +4,7 @@
     "description": "",
     "main": "src/server.js",
     "scripts": {
-        "build": "NODE_ENV=docker docker build -t alvaromarinho/nodejs .",
+        "build-docker": "docker build -t alvaromarinho/nodejs .",
         "start": "nodemon server",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
