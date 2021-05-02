@@ -1,5 +1,6 @@
-const { DAO, sql } = require('./DAO');
-const Information = require('../models/Information');
+import { DAO, sql } from './DAO.js';
+import { Information } from '../models/Information.js';
+import { CustomError } from '../models/CustomError.js';
 
 class InformationDAO extends DAO {
 
@@ -7,7 +8,7 @@ class InformationDAO extends DAO {
         super('informations');
     }
 
-    async createInformation(req) {
+    async create(req) {
         const result = await this.execute(sql.INSERT, new Information(req.body).toDb(req.user.id));
         const [information] = await this.execute(sql.SELECT, null, { id: result.insertId });
         if (!information) throw new CustomError(404, 'Error creating phone');
@@ -15,14 +16,14 @@ class InformationDAO extends DAO {
         return new Information(information);
     }
 
-    async findInformationsBy(filter) {
+    async findBy(filter) {
         const informations = await this.execute(sql.SELECT, null, filter);
         if (!informations) throw new CustomError(404, 'Not found');
 
         return informations.map((res) => new Information(res));
     }
 
-    async updateInformation(obj) {
+    async update(obj) {
         await this.execute(sql.UPDATE, new Information(obj).toDb(), { id: obj.id });
         const [information] = await this.execute(sql.SELECT, null, { id: obj.id });
         if (!information) throw new CustomError(404, 'Not found');
@@ -30,9 +31,9 @@ class InformationDAO extends DAO {
         return new Information(information);
     }
 
-    async deleteInformation(filter) {
+    async remove(filter) {
         return await this.execute(sql.DELETE, null, filter);
     }
 }
 
-module.exports = new InformationDAO();
+export default new InformationDAO();

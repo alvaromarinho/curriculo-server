@@ -1,5 +1,7 @@
 CREATE DATABASE curriculo;
 
+INSERT INTO `users` SET `name` = 'alvinkalango', `email` = 'alvaro.marinho@live.com', `city` = 'Brasília', `uf` = 'DF', `password` = '$2b$10$11IMhoL0iyTWyKMz2mOJDOu4VqBrQHHnna9DKV2gLQTB8m4srHLxa', `description` = 'Big Boss'
+
 CREATE TABLE `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,

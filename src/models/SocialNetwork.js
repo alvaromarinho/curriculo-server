@@ -1,4 +1,4 @@
-class SocialNetwork {
+export class SocialNetwork {
     constructor(obj) {
         this.id = obj.id;
         this.name = obj.name;
@@ -16,5 +16,3 @@ class SocialNetwork {
         }));
     }
 }
-
-module.exports = SocialNetwork;

@@ -1,5 +1,6 @@
-const { DAO, sql } = require('./DAO');
-const Phone = require('../models/Phone');
+import { DAO, sql } from './DAO.js';
+import { Phone } from '../models/Phone.js';
+import { CustomError } from '../models/CustomError.js';
 
 class PhoneDAO extends DAO {
 
@@ -7,7 +8,7 @@ class PhoneDAO extends DAO {
         super('phones');
     }
 
-    async createPhone(obj) {
+    async create(obj) {
         const result = await this.execute(sql.INSERT, new Phone(obj).toDb(obj.userId));
         const [phone] = await this.execute(sql.SELECT, null, { id: result.insertId });
         if (!phone) throw new CustomError(404, 'Error creating phone');
@@ -15,16 +16,16 @@ class PhoneDAO extends DAO {
         return new Phone(phone);
     }
 
-    async findPhonesByUserId(filter) {
+    async findByUserId(filter) {
         const phones = await this.execute(sql.SELECT, null, filter);
-        if (!phones.length) throw new CustomError(404, 'Not found');
+        if (!phones) throw new CustomError(404, 'Not found');
 
         return phones.map((res) => new Phone(res));
     }
 
-    async deletePhone(filter) {
+    async remove(filter) {
         return await this.execute(sql.DELETE, null, filter);
     }
 }
 
-module.exports = new PhoneDAO();
+export default new PhoneDAO();

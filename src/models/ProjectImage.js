@@ -1,4 +1,4 @@
-class ProjectImage {
+export class ProjectImage {
     constructor(obj) {
         this.id = obj.id;
         this.url = obj.url;
@@ -12,5 +12,3 @@ class ProjectImage {
         }));
     }
 }
-
-module.exports = ProjectImage;

@@ -1,9 +1,9 @@
-require('dotenv').config({ path: process.env.NODE_ENV === 'docker' ? '.env.docker' : '.env' });
-const express = require('express');
-const routes = require('./routes');
-const cors = require('cors');
-const multiParty = require('connect-multiparty');
-const bodyParser = require('body-parser');
+import './config/env.js';
+import express from 'express';
+import cors from 'cors';
+import multiParty from 'connect-multiparty';
+import bodyParser from 'body-parser';
+import routes from './routes.js';
 
 const app = express();
 

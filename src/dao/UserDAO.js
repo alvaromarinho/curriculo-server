@@ -1,12 +1,12 @@
-const { DAO, sql } = require('./DAO');
-const ImageHelper = require('../helpers/ImageHelper');
-const User = require('../models/User');
+import { DAO, sql } from './DAO.js';
+import { uploadImage, deleteFile, deleteFolder } from '../helpers/ImageHelper.js';
+import { CustomError } from '../models/CustomError.js';
+import { User } from '../models/User.js';
 
-const phoneDAO = require('./PhoneDAO');
-const socialNetworkDAO = require('./SocialNetworkDAO');
-const informationDAO = require('./InformationDAO');
-const portfolioDAO = require('./PortfolioDAO');
-const CustomError = require('../models/CustomError');
+import phoneDAO from './PhoneDAO.js';
+import socialNetworkDAO from './SocialNetworkDAO.js';
+import informationDAO from './InformationDAO.js';
+import portfolioDAO from './PortfolioDAO.js';
 
 class UserDAO extends DAO {
 
@@ -14,39 +14,39 @@ class UserDAO extends DAO {
         super('users');
     }
 
-    async createUser(req) {
-        if (req.files) req.body.image = ImageHelper.upload(req.body.email, req.files.image);
+    async create(req) {
+        if (req.files) req.body.image = uploadImage(req.body.email, req.files.image);
 
         const result = await this.execute(sql.INSERT, new User(req.body).toDb(req.body.password));
         const [user] = await this.execute(sql.SELECT, null, { id: result.insertId });
         if (!user) {
-            ImageHelper.deleteFile(req.body.image);
+            deleteFile(req.body.image);
             throw new CustomError(400, 'Error creating user');
         };
 
         user.phones = [];
         for (const phone of req.body.phones) {
-            user.phones.push(await phoneDAO.createPhone({ number: phone, userId: user.id }));
+            user.phones.push(await phoneDAO.create({ number: phone, userId: user.id }));
         }
 
         user.socialNetworks = [];
         for (const socialNetwork of req.body.socialNetworks) {
-            user.socialNetworks.push(await socialNetworkDAO.createSocialNetwork({ ...socialNetwork, userId: user.id }));
+            user.socialNetworks.push(await socialNetworkDAO.create({ ...socialNetwork, userId: user.id }));
         }
 
         return user.length > 1 ? user.map((item) => new User(item)) : new User(user);
     }
 
-    async findUserBy(filter, withPass = false) {
+    async findBy(filter, withPass = false) {
         const [user] = await this.execute(sql.SELECT, null, filter);
         if (!user) throw new CustomError(404, 'Not found');
 
-        user.phones = await phoneDAO.findPhonesByUserId({ user_id: user.id });
-        user.socialNetworks = await socialNetworkDAO.findSocialNetworksBy({ user_id: user.id });
+        user.phones = await phoneDAO.findByUserId({ user_id: user.id }) || [];
+        user.socialNetworks = await socialNetworkDAO.findBy({ user_id: user.id }) || [];
         return withPass ? { user: new User(user, true), userPassword: user.password } : new User(user, true);
     }
 
-    async updateUser(req) {
+    async update(req) {
         await this.execute(sql.UPDATE, new User(req.body).toDb(req.body.password), { id: req.user.id });
         const [user] = await this.execute(sql.SELECT, null, { id: req.user.id });
         if (!user) throw new CustomError(404, 'Not found');
@@ -63,9 +63,9 @@ class UserDAO extends DAO {
                     toAdd.push(phone)
             })
 
-            await phoneDAO.deletePhone(`id NOT IN (${toNotDelete})`);
+            await phoneDAO.remove(`id NOT IN (${toNotDelete})`);
             for (const phone of toAdd) {
-                await phoneDAO.createPhone({ number: phone.number, userId: req.user.id });
+                await phoneDAO.create({ number: phone.number, userId: req.user.id });
             }
         }
 
@@ -84,31 +84,31 @@ class UserDAO extends DAO {
                 }
             })
 
-            await socialNetworkDAO.deleteSocialNetwork(`id NOT IN (${toNotDelete})`);
+            await socialNetworkDAO.remove(`id NOT IN (${toNotDelete})`);
             for (const socialNetwork of toUpdate) {
-                await socialNetworkDAO.updateSocialNetwork(socialNetwork);
+                await socialNetworkDAO.update(socialNetwork);
             }
             for (const socialNetwork of toAdd) {
-                await socialNetworkDAO.createSocialNetwork({ ...socialNetwork, userId: req.user.id });
+                await socialNetworkDAO.create({ ...socialNetwork, userId: req.user.id });
             }
         }
 
-        user.phones = await phoneDAO.findPhonesByUserId({ user_id: req.user.id });
-        user.socialNetworks = await socialNetworkDAO.findSocialNetworksBy({ user_id: req.user.id });
+        user.phones = await phoneDAO.findByUserId({ user_id: req.user.id });
+        user.socialNetworks = await socialNetworkDAO.findBy({ user_id: req.user.id });
         return new User(user);
     }
 
-    async deleteUser(id) {
+    async removeById(id) {
         const [user] = await this.execute(sql.SELECT, null, { id });
         if (!user) throw new CustomError(404, 'Not found');
 
-        ImageHelper.deleteFolder(user.email);
-        await phoneDAO.deletePhone({ user_id: id });
-        await socialNetworkDAO.deleteSocialNetwork({ user_id: id });
-        await informationDAO.deleteInformation({ user_id: id });
-        await portfolioDAO.deletePortfolio({ user_id: id });
+        deleteFolder(user.email);
+        await phoneDAO.remove({ user_id: id });
+        await socialNetworkDAO.remove({ user_id: id });
+        await informationDAO.remove({ user_id: id });
+        await portfolioDAO.remove({ user_id: id });
         return await this.execute(sql.DELETE, null, { id });
     }
 }
 
-module.exports = new UserDAO();
+export default new UserDAO();

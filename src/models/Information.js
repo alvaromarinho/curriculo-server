@@ -1,4 +1,4 @@
-class Information {
+export class Information {
     constructor(obj) {
         this.id = obj.id;
         this.title = obj.title;
@@ -23,5 +23,3 @@ class Information {
         }));
     }
 }
-
-module.exports = Information;

@@ -1,57 +1,52 @@
-const fs = require('fs');
-const path = require('path');
+import { readFile, existsSync, mkdirSync, renameSync, unlinkSync, rmdirSync } from 'fs';
+import { resolve } from 'path';
 
-const PATH_DESTINY = path.resolve('./assets/img');
+const PATH_DESTINY = resolve('./assets/img');
 
-class ImageHelper {
+export const getImage = (req, res) => {
+    const { imageUrl } = req.query;
 
-    static get(req, res) {
-        const { imageUrl } = req.query;
+    readFile(`${PATH_DESTINY}/${imageUrl}`, (err, content) => {
+        if (err) return next({ httpStatusCode: 400, responseMessage: err });
+        res.writeHead(200, { 'content-type': 'image/png' });
+        res.end(content);
+    });
+}
 
-        fs.readFile(`${PATH_DESTINY}/${imageUrl}`, (err, content) => {
-            if (err) return next({ httpStatusCode: 400, responseMessage: err });
-            res.writeHead(200, { 'content-type': 'image/png' });
-            res.end(content);
-        });
-    }
-
-    static upload(folder, file) {
-        try {
-            if (!fs.existsSync(`${PATH_DESTINY}/${folder}`)) {
-                fs.mkdirSync(`${PATH_DESTINY}/${folder}`);
-            }
-            if (file) {
-                const urlImg = `${new Date().getTime()}.png`;
-                fs.renameSync(file.path, `${PATH_DESTINY}/${folder}/${urlImg}`);
-                return `${folder}/${urlImg}`;
-            }
-        } catch (error) {
-            console.log('[error] upload image');
-            console.log(error);
+export const uploadImage = (folder, file) => {
+    try {
+        if (!existsSync(`${PATH_DESTINY}/${folder}`)) {
+            mkdirSync(`${PATH_DESTINY}/${folder}`, { recursive: true });
         }
-    }
-
-    static deleteFile(pathFile) {
-        try {
-            if (fs.existsSync(`${PATH_DESTINY}/${pathFile}`)) {
-                fs.unlinkSync(`${PATH_DESTINY}/${pathFile}`);
-            }
-        } catch (error) {
-            console.log('[error] delete image');
-            throw error;
+        if (file) {
+            const urlImg = `${new Date().getTime()}.png`;
+            renameSync(file.path, `${PATH_DESTINY}/${folder}/${urlImg}`);
+            return `${folder}/${urlImg}`;
         }
-    }
-
-    static deleteFolder(pathFolder) {
-        try {
-            if (fs.existsSync(`${PATH_DESTINY}/${pathFolder}`)) {
-                fs.rmdirSync(`${PATH_DESTINY}/${pathFolder}`, { recursive: true });
-            }
-        } catch (error) {
-            console.log('[error] delete folder');
-            throw error;
-        }
+    } catch (error) {
+        console.log('[error] upload image');
+        console.log(error);
     }
 }
 
-module.exports = ImageHelper;
+export const deleteFile = (pathFile) => {
+    try {
+        if (existsSync(`${PATH_DESTINY}/${pathFile}`)) {
+            unlinkSync(`${PATH_DESTINY}/${pathFile}`);
+        }
+    } catch (error) {
+        console.log('[error] delete file');
+        throw error;
+    }
+}
+
+export const deleteFolder = (pathFolder) => {
+    try {
+        if (existsSync(`${PATH_DESTINY}/${pathFolder}`)) {
+            rmdirSync(`${PATH_DESTINY}/${pathFolder}`, { recursive: true });
+        }
+    } catch (error) {
+        console.log('[error] delete folder');
+        throw error;
+    }
+}
