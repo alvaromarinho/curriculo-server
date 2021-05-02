@@ -2,10 +2,11 @@ const mysql = require('mysql');
 const util = require('util');
 
 const con = mysql.createConnection({
-    hots: 'localhost',
-    user: 'root',
-    password: 'root',
-    database: 'alvin'
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE
 });
 
 con.connect((err) => {
@@ -16,7 +17,8 @@ con.connect((err) => {
 module.exports = {
     query(sql, args) {
         return util.promisify(con.query).call(con, sql, args);
-    }, close() {
+    },
+    close() {
         return util.promisify(con.end).call(con);
     }
 };

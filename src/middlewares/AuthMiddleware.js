@@ -1,5 +1,4 @@
 const jwt = require("jsonwebtoken");
-const json = require("../config/config.json");
 const CustomError = require('../models/CustomError');
 
 module.exports = (req, res, next) => {
@@ -13,7 +12,7 @@ module.exports = (req, res, next) => {
         const [schema, token] = splitedToken;
         if (schema !== 'Bearer') return next({ httpStatusCode: 400, responseMessage: 'authorization header not allowed' });
 
-        jwt.verify(token, json.secret, (err, decoded) => {
+        jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
             if (err) return next({ httpStatusCode: 401, responseMessage: err.message });
             req.user = { id: decoded.id, email: decoded.email }
             return next();
