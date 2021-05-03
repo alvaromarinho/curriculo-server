@@ -1,4 +1,4 @@
-const query = require('../config/db');
+const conn = require('../config/db');
 
 const sql = {
     SELECT: 'SELECT',
@@ -20,13 +20,13 @@ class DAO {
 
             switch (operation) {
                 case sql.SELECT:
-                    return await query('SELECT * FROM ?? WHERE ?', [this.table, { toSqlString: () => where }]);
+                    return await conn.query('SELECT * FROM ?? WHERE ?', [this.table, { toSqlString: () => where }]);
                 case sql.INSERT:
-                    return await query('INSERT INTO ?? SET ?', [this.table, setParams]);
+                    return await conn.query('INSERT INTO ?? SET ?', [this.table, setParams]);
                 case sql.UPDATE:
-                    return await query('UPDATE ?? SET ? WHERE ?', [this.table, setParams, { toSqlString: () => where }]);
+                    return await conn.query('UPDATE ?? SET ? WHERE ?', [this.table, setParams, { toSqlString: () => where }]);
                 case sql.DELETE:
-                    return await query('DELETE FROM ?? WHERE ?', [this.table, { toSqlString: () => where }]);
+                    return await conn.query('DELETE FROM ?? WHERE ?', [this.table, { toSqlString: () => where }]);
             }
         } catch (error) {
             error.sql && console.log('[erro in SQL]', error.sql)

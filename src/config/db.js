@@ -1,4 +1,4 @@
-const mysql = require('mysql2');
+const mysql = require('mysql');
 const util = require('util');
 
 const conn = mysql.createConnection({
@@ -14,4 +14,11 @@ conn.connect((err) => {
     console.log('DB Connected!\n');
 });
 
-module.exports = (sql, args) => util.promisify(conn.query).call(conn, sql, args);
+module.exports = {
+    query(sql, args) {
+        return util.promisify(conn.query).call(conn, sql, args);
+    },
+    close() {
+        return util.promisify(conn.end).call(conn);
+    }
+}
