@@ -1,13 +1,13 @@
-import { query } from '../config/db.js';
+const query = require('../config/db');
 
-export const sql = {
+const sql = {
     SELECT: 'SELECT',
     INSERT: 'INSERT',
     UPDATE: 'UPDATE',
     DELETE: 'DELETE',
 }
 
-export class DAO {
+class DAO {
     constructor(table) {
         this.table = table;
     }
@@ -34,3 +34,5 @@ export class DAO {
         }
     }
 }
+
+module.exports = { DAO, sql };

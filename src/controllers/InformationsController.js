@@ -1,5 +1,5 @@
-import informationDAO from '../dao/InformationDAO.js';
-import { CustomError } from '../models/CustomError.js';
+const informationDAO = require('../dao/InformationDAO');
+const CustomError = require('../models/CustomError');
 
 const create = async (req, res, next) => {
     try {
@@ -44,4 +44,4 @@ const resourceOwner = async (req, res, next) => {
     return next();
 }
 
-export default { create, find, update, remove, resourceOwner }
+module.exports = { create, find, update, remove, resourceOwner }

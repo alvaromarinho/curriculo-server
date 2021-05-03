@@ -1,13 +1,12 @@
-import { Router } from 'express';
-import { getImage, deleteFile } from './helpers/ImageHelper.js';
-import authMiddle from './middlewares/AuthMiddleware.js';
+const express = require('express');
+const router = express.Router();
+const authMiddle = require('./middlewares/AuthMiddleware');
 
-import user from './controllers/UsersController.js';
-import info from './controllers/InformationsController.js';
-import portfolio from './controllers/PortfoliosController.js';
-import project from './controllers/ProjectsController.js';
-
-const router = Router();
+const { getImage, deleteFile } = require('./helpers/ImageHelper');
+const user = require('./controllers/UsersController');
+const info = require('./controllers/InformationsController');
+const portfolio = require('./controllers/PortfoliosController');
+const project = require('./controllers/ProjectsController');
 
 // router log
 router.use((req, res, next) => {
@@ -17,8 +16,6 @@ router.use((req, res, next) => {
 
 router.get('/api', (req, res) => res.status(200).json('curriculum v1.0.0'));
 router.post('/api/auth', user.auth);
-
-// image
 router.get('/api/image', (req, res) => getImage(req, res));
 // router.delete('/api/image', (req, res) => deleteFile(req, res));
 
@@ -47,4 +44,4 @@ router.get('/api/portfolios/:portfolioId/projects/:projectId', authMiddle, portf
 router.put('/api/portfolios/:portfolioId/projects/:projectId', authMiddle, portfolio.resourceOwner, project.update);
 router.delete('/api/portfolios/:portfolioId/projects/:projectId', authMiddle, portfolio.resourceOwner, project.remove);
 
-export default router;
+module.exports = router;

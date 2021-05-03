@@ -1,12 +1,12 @@
-import { DAO, sql } from './DAO.js';
-import { uploadImage, deleteFile, deleteFolder } from '../helpers/ImageHelper.js';
-import { CustomError } from '../models/CustomError.js';
-import { User } from '../models/User.js';
+const { DAO, sql } = require('./DAO');
+const { uploadImage, deleteFile, deleteFolder } = require('../helpers/ImageHelper');
+const User = require('../models/User');
+const CustomError = require('../models/CustomError');
 
-import phoneDAO from './PhoneDAO.js';
-import socialNetworkDAO from './SocialNetworkDAO.js';
-import informationDAO from './InformationDAO.js';
-import portfolioDAO from './PortfolioDAO.js';
+const phoneDAO = require('./PhoneDAO');
+const socialNetworkDAO = require('./SocialNetworkDAO');
+const informationDAO = require('./InformationDAO');
+const portfolioDAO = require('./PortfolioDAO');
 
 class UserDAO extends DAO {
 
@@ -111,4 +111,4 @@ class UserDAO extends DAO {
     }
 }
 
-export default new UserDAO();
+module.exports = new UserDAO();

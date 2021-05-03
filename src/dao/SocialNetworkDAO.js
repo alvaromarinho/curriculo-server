@@ -1,8 +1,8 @@
-import { DAO, sql } from './DAO.js';
-import { SocialNetwork } from '../models/SocialNetwork.js';
-import { CustomError } from '../models/CustomError.js';
+const { DAO, sql } = require('./DAO');
+const SocialNetwork = require('../models/SocialNetwork');
+const CustomError = require('../models/CustomError');
 
-export class SocialNetworkDAO extends DAO {
+class SocialNetworkDAO extends DAO {
 
     constructor() {
         super('social_networks');
@@ -36,4 +36,4 @@ export class SocialNetworkDAO extends DAO {
     }
 }
 
-export default new SocialNetworkDAO();
+module.exports = new SocialNetworkDAO();

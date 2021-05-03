@@ -1,6 +1,6 @@
-import { hashSync, genSaltSync } from 'bcrypt';
+const bcrypt = require('bcrypt');
 
-export class User {
+class User {
     constructor(obj) {
         this.id = obj.id;
         this.name = obj.name;
@@ -20,8 +20,10 @@ export class User {
             image: this.image,
             city: this.city,
             uf: this.uf,
-            password: password && hashSync(password, genSaltSync()),
+            password: password && bcrypt.hashSync(password, bcrypt.genSaltSync()),
             description: this.description,
         }));
     }
 }
+
+module.exports = User;

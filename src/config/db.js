@@ -1,7 +1,7 @@
-import { createConnection } from 'mysql2';
-import { promisify } from 'util';
+const mysql = require('mysql2');
+const util = require('util');
 
-export const conn = createConnection({
+const conn = mysql.createConnection({
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
     user: process.env.DB_USER,
@@ -14,4 +14,4 @@ conn.connect((err) => {
     console.log('DB Connected!\n');
 });
 
-export const query = (sql, args) => promisify(conn.query).call(conn, sql, args);
+module.exports = (sql, args) => util.promisify(conn.query).call(conn, sql, args);

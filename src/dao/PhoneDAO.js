@@ -1,6 +1,6 @@
-import { DAO, sql } from './DAO.js';
-import { Phone } from '../models/Phone.js';
-import { CustomError } from '../models/CustomError.js';
+const { DAO, sql } = require('./DAO');
+const Phone = require('../models/Phone');
+const CustomError = require('../models/CustomError');
 
 class PhoneDAO extends DAO {
 
@@ -28,4 +28,4 @@ class PhoneDAO extends DAO {
     }
 }
 
-export default new PhoneDAO();
+module.exports = new PhoneDAO();

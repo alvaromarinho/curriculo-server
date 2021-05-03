@@ -1,4 +1,4 @@
-export class Phone {
+class Phone {
     constructor(obj) {
         this.id = obj.id;
         this.number = obj.number;
@@ -12,3 +12,5 @@ export class Phone {
         }));
     }
 }
+
+module.exports = Phone;

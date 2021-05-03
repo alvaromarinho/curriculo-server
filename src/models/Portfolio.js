@@ -1,4 +1,4 @@
-export class Portfolio {
+class Portfolio {
     constructor(obj) {
         this.id = obj.id;
         this.name = obj.name;
@@ -14,3 +14,5 @@ export class Portfolio {
         }));
     }
 }
+
+module.exports = Portfolio;

@@ -1,7 +1,7 @@
-import jwt from 'jsonwebtoken';
-import { CustomError } from '../models/CustomError.js';
+const jwt = require('jsonwebtoken');
+const CustomError = require('../models/CustomError');
 
-export default (req, res, next) => {
+module.exports = (req, res, next) => {
     try {
         const authHeader = req.headers.authorization;
         if (!authHeader) return next(new CustomError(400, 'authorization header not found'));

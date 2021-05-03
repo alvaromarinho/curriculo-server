@@ -1,4 +1,4 @@
-export class Project {
+class Project {
     constructor(obj) {
         this.id = obj.id;
         this.title = obj.title;
@@ -19,3 +19,5 @@ export class Project {
         }));
     }
 }
+
+module.exports = Project;

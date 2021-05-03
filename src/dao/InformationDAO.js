@@ -1,6 +1,6 @@
-import { DAO, sql } from './DAO.js';
-import { Information } from '../models/Information.js';
-import { CustomError } from '../models/CustomError.js';
+const { DAO, sql } = require('./DAO');
+const Information = require('../models/Information');
+const CustomError = require('../models/CustomError');
 
 class InformationDAO extends DAO {
 
@@ -36,4 +36,4 @@ class InformationDAO extends DAO {
     }
 }
 
-export default new InformationDAO();
+module.exports = new InformationDAO();

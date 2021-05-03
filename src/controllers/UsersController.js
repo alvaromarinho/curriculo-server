@@ -1,14 +1,14 @@
-import jwt from 'jsonwebtoken';
-import userDAO from '../dao/UserDAO.js';
-import { compareSync } from 'bcrypt';
-import { CustomError } from '../models/CustomError.js';
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+const userDAO = require('../dao/UserDAO');
+const CustomError = require('../models/CustomError');
 
 const auth = async (req, res, next) => {
     try {
         const { email, password } = req.body;
         const { user, userPassword } = await userDAO.findBy({ email }, true);
         if (!user) return next({ httpStatusCode: 404 });
-        if (!compareSync(password, userPassword)) return next({ httpStatusCode: 401 });
+        if (!bcrypt.compareSync(password, userPassword)) return next({ httpStatusCode: 401 });
 
         const token = jwt.sign({ id: user.id, email: user.email, name: user.name }, process.env.JWT_SECRET, { expiresIn: 86400 });
         res.status(202).json({ user, token });
@@ -63,4 +63,4 @@ const remove = async (req, res, next) => {
     }
 }
 
-export default { auth, create, find, findAllData, update, remove }
+module.exports = { auth, create, find, findAllData, update, remove }

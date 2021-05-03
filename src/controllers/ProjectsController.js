@@ -1,5 +1,5 @@
-import projectDAO from '../dao/ProjectDAO.js';
-import { CustomError } from '../models/CustomError.js';
+const projectDAO = require('../dao/ProjectDAO');
+const CustomError = require('../models/CustomError');
 
 const create = async (req, res, next) => {
     try {
@@ -37,4 +37,4 @@ const remove = async (req, res, next) => {
     }
 }
 
-export default { create, find, update, remove }
+module.exports = { create, find, update, remove }

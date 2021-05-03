@@ -10,7 +10,6 @@
     },
     "keywords": [],
     "author": "alvaromarinho.com.br",
-    "type": "module",
     "license": "ISC",
     "dependencies": {
         "bcrypt": "^5.0.1",

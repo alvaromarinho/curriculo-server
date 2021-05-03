@@ -1,16 +1,15 @@
-import './config/env.js';
-import express from 'express';
-import cors from 'cors';
-import multiParty from 'connect-multiparty';
-import bodyParser from 'body-parser';
-import routes from './routes.js';
+require('dotenv').config({ path: process.env.NODE_ENV === 'docker' ? '.env.docker' : '.env' });
+
+const express = require('express');
+const multiParty = require('connect-multiparty');
+const cors = require('cors');
+const routes = require('./routes');
 
 const app = express();
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 app.use(multiParty());
-
 app.use(cors());
 app.use(routes);
 

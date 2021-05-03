@@ -1,9 +1,9 @@
-import { DAO, sql } from './DAO.js';
-import { uploadImage, deleteFile } from '../helpers/ImageHelper.js';
-import { ProjectImage } from '../models/ProjectImage.js';
-import { CustomError } from '../models/CustomError.js';
+const { DAO, sql } = require('./DAO');
+const { uploadImage, deleteFile } = require('../helpers/ImageHelper');
+const CustomError = require('../models/CustomError');
+const ProjectImage = require('../models/ProjectImage');
 
-export class ProjectImageDAO extends DAO {
+class ProjectImageDAO extends DAO {
 
     constructor() {
         super('project_images');
@@ -32,4 +32,4 @@ export class ProjectImageDAO extends DAO {
     }
 }
 
-export default new ProjectImageDAO();
+module.exports = new ProjectImageDAO();

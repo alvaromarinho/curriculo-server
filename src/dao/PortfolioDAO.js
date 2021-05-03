@@ -1,7 +1,7 @@
-import { DAO, sql } from './DAO.js';
-import { Portfolio } from '../models/Portfolio.js';
-import { CustomError } from '../models/CustomError.js';
-import projectDAO from './ProjectDAO.js';
+const { DAO, sql } = require('./DAO');
+const Portfolio = require('../models/Portfolio');
+const CustomError = require('../models/CustomError');
+const projectDAO = require('./ProjectDAO');
 
 class PortfolioDAO extends DAO {
 
@@ -47,4 +47,4 @@ class PortfolioDAO extends DAO {
     }
 }
 
-export default new PortfolioDAO();
+module.exports = new PortfolioDAO();
