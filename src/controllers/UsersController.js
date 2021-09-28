@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const userDAO = require('../dao/UserDAO');
+const informationDAO = require('../dao/InformationDAO');
+const portfolioDAO = require('../dao/PortfolioDAO');
 const CustomError = require('../models/CustomError');
 
 const auth = async (req, res, next) => {
@@ -38,7 +40,8 @@ const find = async (req, res, next) => {
 const findAllData = async (req, res, next) => {
     try {
         const user = await userDAO.findBy({ id: req.params.userId });
-        user.informations = 'teste'
+        user.informations = await informationDAO.findBy({ user_id: user.id }) || []
+        user.portfolios = await portfolioDAO.findBy({ user_id: user.id }) || []
         res.status(200).json(user)
     } catch (error) {
         next(new CustomError(error.httpStatusCode || 400, error.message || 'Error finding user'))

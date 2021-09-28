@@ -41,7 +41,7 @@ class UserDAO extends DAO {
         const [user] = await this.execute(sql.SELECT, null, filter);
         if (!user) throw new CustomError(404, 'Not found');
 
-        user.phones = await phoneDAO.findByUserId({ user_id: user.id }) || [];
+        user.phones = await phoneDAO.findBy({ user_id: user.id }) || [];
         user.socialNetworks = await socialNetworkDAO.findBy({ user_id: user.id }) || [];
         return withPass ? { user: new User(user, true), userPassword: user.password } : new User(user, true);
     }
