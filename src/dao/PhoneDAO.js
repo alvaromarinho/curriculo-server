@@ -18,7 +18,7 @@ class PhoneDAO extends DAO {
 
     async findBy(filter) {
         const phones = await this.execute(sql.SELECT, null, filter);
-        if (!phones) throw new CustomError(404, 'Not found');
+        if (!phones) throw new CustomError(404, 'No phone found');
 
         return phones.map((res) => new Phone(res));
     }

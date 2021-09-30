@@ -18,7 +18,7 @@ class InformationDAO extends DAO {
 
     async findBy(filter) {
         const informations = await this.execute(sql.SELECT, null, filter);
-        if (!informations) throw new CustomError(404, 'Not found');
+        if (!informations) throw new CustomError(404, 'No information found');
 
         return informations.map((res) => new Information(res));
     }
@@ -26,7 +26,7 @@ class InformationDAO extends DAO {
     async update(obj) {
         await this.execute(sql.UPDATE, new Information(obj).toDb(), { id: obj.id });
         const [information] = await this.execute(sql.SELECT, null, { id: obj.id });
-        if (!information) throw new CustomError(404, 'Not found');
+        if (!information) throw new CustomError(404, 'No information found');
 
         return new Information(information);
     }

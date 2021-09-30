@@ -20,7 +20,7 @@ class ProjectImageDAO extends DAO {
 
     async findBy(filter) {
         const projectImages = await this.execute(sql.SELECT, null, filter);
-        if (!projectImages) throw new CustomError(404, 'Not found');
+        if (!projectImages) throw new CustomError(404, 'No project image found');
 
         return projectImages.map((res) => new ProjectImage(res));
     }

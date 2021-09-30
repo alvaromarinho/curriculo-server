@@ -19,7 +19,7 @@ class PortfolioDAO extends DAO {
 
     async findBy(filter) {
         const portfolios = await this.execute(sql.SELECT, null, filter);
-        if (!portfolios) throw new CustomError(404, 'Not found');
+        if (!portfolios) throw new CustomError(404, 'No portfolio found');
 
         for (const portfolio of portfolios) {
             portfolio.projects = await projectDAO.findBy({ portfolio_id: portfolio.id }) || [];
@@ -31,7 +31,7 @@ class PortfolioDAO extends DAO {
     async update(obj) {
         await this.execute(sql.UPDATE, new Portfolio(obj).toDb(), { id: obj.id });
         const [portfolio] = await this.execute(sql.SELECT, null, { id: obj.id });
-        if (!portfolio) throw new CustomError(404, 'Not found');
+        if (!portfolio) throw new CustomError(404, 'No portfolio found');
 
         return new Portfolio(portfolio);
     }

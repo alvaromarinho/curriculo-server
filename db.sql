@@ -49,7 +49,7 @@ CREATE TABLE `informations` (
   `subtitle` VARCHAR(255) NULL,
   `description` LONGTEXT NULL,
   `type` VARCHAR(45) NOT NULL,
-  `start` DATETIME NOT NULL,
+  `start` DATETIME NULL,
   `end` DATETIME NULL,
   `user_id` INT(11) NOT NULL,
   `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,

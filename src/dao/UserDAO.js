@@ -39,7 +39,7 @@ class UserDAO extends DAO {
 
     async findBy(filter, withPass = false) {
         const [user] = await this.execute(sql.SELECT, null, filter);
-        if (!user) throw new CustomError(404, 'Not found');
+        if (!user) throw new CustomError(404, 'No user found');
 
         user.phones = await phoneDAO.findBy({ user_id: user.id }) || [];
         user.socialNetworks = await socialNetworkDAO.findBy({ user_id: user.id }) || [];
@@ -49,7 +49,7 @@ class UserDAO extends DAO {
     async update(req) {
         await this.execute(sql.UPDATE, new User(req.body).toDb(req.body.password), { id: req.user.id });
         const [user] = await this.execute(sql.SELECT, null, { id: req.user.id });
-        if (!user) throw new CustomError(404, 'Not found');
+        if (!user) throw new CustomError(404, 'No user found');
 
         // PHONES
         if (req.body.phones) {
@@ -100,7 +100,7 @@ class UserDAO extends DAO {
 
     async removeById(id) {
         const [user] = await this.execute(sql.SELECT, null, { id });
-        if (!user) throw new CustomError(404, 'Not found');
+        if (!user) throw new CustomError(404, 'No user found');
 
         deleteFolder(user.email);
         await phoneDAO.remove({ user_id: id });
