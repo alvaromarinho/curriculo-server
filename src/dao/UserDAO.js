@@ -63,7 +63,7 @@ class UserDAO extends DAO {
                     toAdd.push(phone)
             })
 
-            await phoneDAO.remove(`id NOT IN (${toNotDelete})`);
+            await phoneDAO.remove(toNotDelete.length ? `id NOT IN (${toNotDelete})` : '1=1');
             for (const phone of toAdd) {
                 await phoneDAO.create({ number: phone.number, userId: req.user.id });
             }
@@ -84,7 +84,7 @@ class UserDAO extends DAO {
                 }
             })
 
-            await socialNetworkDAO.remove(`id NOT IN (${toNotDelete})`);
+            await socialNetworkDAO.remove(toNotDelete.length ? `id NOT IN (${toNotDelete})` : '1=1');
             for (const socialNetwork of toUpdate) {
                 await socialNetworkDAO.update(socialNetwork);
             }
@@ -93,7 +93,7 @@ class UserDAO extends DAO {
             }
         }
 
-        user.phones = await phoneDAO.findByUserId({ user_id: req.user.id });
+        user.phones = await phoneDAO.findBy({ user_id: req.user.id });
         user.socialNetworks = await socialNetworkDAO.findBy({ user_id: req.user.id });
         return new User(user);
     }

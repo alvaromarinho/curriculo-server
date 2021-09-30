@@ -14,7 +14,7 @@ class ProjectDAO extends DAO {
         const [project] = await this.execute(sql.SELECT, null, { id: result.insertId });
         if (!project) throw new CustomError(404, 'Error creating project');
 
-        if (req.files) {
+        if (req.files && req.files.images && req.files.images.length) {
             project.images = [];
             for (const image of req.files.images) {
                 project.images.push(await projectImageDAO.create(project.id, image, req.user.email));
@@ -44,7 +44,7 @@ class ProjectDAO extends DAO {
         return new Project(project);
     }
 
-    async delete(filter) {
+    async remove(filter) {
         const projects = await this.execute(sql.SELECT, null, filter);
 
         const projectsToDeleteId = []
