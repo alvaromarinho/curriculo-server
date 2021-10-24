@@ -48,7 +48,10 @@ class UserDAO extends DAO {
     }
 
     async update(req) {
-        await this.execute(sql.UPDATE, new User(req.body).toDb(req.body.password), { id: req.user.id });
+        const setParams = new User(req.body).toDb(req.body.password)
+        if(Object.keys(setParams).length > 0)
+            await this.execute(sql.UPDATE, new User(req.body).toDb(req.body.password), { id: req.user.id });
+            
         const [user] = await this.execute(sql.SELECT, null, { id: req.user.id });
         if (!user) throw new CustomError(404, 'No user found');
 
