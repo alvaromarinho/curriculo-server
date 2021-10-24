@@ -40,9 +40,10 @@ class UserDAO extends DAO {
     async findBy(filter, withPass = false) {
         const [user] = await this.execute(sql.SELECT, null, filter);
         if (!user) throw new CustomError(404, 'No user found');
-
-        user.phones = await phoneDAO.findBy({ user_id: user.id }) || [];
-        user.socialNetworks = await socialNetworkDAO.findBy({ user_id: user.id }) || [];
+        if(!withPass) {
+            user.phones = await phoneDAO.findBy({ user_id: user.id }) || [];
+            user.socialNetworks = await socialNetworkDAO.findBy({ user_id: user.id }) || [];
+        }
         return withPass ? { user: new User(user, true), userPassword: user.password } : new User(user, true);
     }
 
