@@ -23,6 +23,14 @@ class PhoneDAO extends DAO {
         return phones.map((res) => new Phone(res));
     }
 
+    async update(obj) {
+        await this.execute(sql.UPDATE, new Phone(obj).toDb(), { id: obj.id });
+        const [phone] = await this.execute(sql.SELECT, null, { id: obj.id });
+        if (!phone) throw new CustomError(404, 'No phone found');
+
+        return new Phone(phone);
+    }
+
     async remove(filter) {
         return await this.execute(sql.DELETE, null, filter);
     }

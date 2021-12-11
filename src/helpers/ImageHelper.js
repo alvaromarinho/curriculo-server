@@ -20,12 +20,14 @@ const uploadImage = (folder, file) => {
         }
         if (file) {
             const urlImg = `${new Date().getTime()}.png`;
-            fs.renameSync(file.path, `${PATH_DESTINY}/${folder}/${urlImg}`);
-            return `${folder}/${urlImg}`;
+            fs.copyFile(file.path, `${PATH_DESTINY}/${folder}/${urlImg}`, (err) => {
+                if (err) throw err;
+            });
+            return `/${folder}/${urlImg}`;
         }
     } catch (error) {
         console.log('[error] upload image');
-        console.log(error);
+        throw error;
     }
 }
 

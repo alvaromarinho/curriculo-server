@@ -8,7 +8,7 @@ CREATE TABLE `users` (
   `description` longtext NOT NULL,
   `city` varchar(100) NOT NULL,
   `uf` varchar(20) NOT NULL,
-  `image` varchar(255) DEFAULT '/assets/img/default_user.png',
+  `image` varchar(255) DEFAULT 'default_user.png',
   `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),

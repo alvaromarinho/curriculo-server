@@ -48,6 +48,11 @@ class UserDAO extends DAO {
     }
 
     async update(req) {
+        if (req.files) {
+            deleteFile(req.body.image);
+            req.body.image = uploadImage(req.body.email, req.files.image);
+        }
+
         const setParams = new User(req.body).toDb(req.body.password)
         if(Object.keys(setParams).length > 0)
             await this.execute(sql.UPDATE, new User(req.body).toDb(req.body.password), { id: req.user.id });
@@ -59,15 +64,21 @@ class UserDAO extends DAO {
         if (req.body.phones) {
             const toNotDelete = [];
             const toAdd = [];
+            const toUpdate = [];
 
             req.body.phones.map((phone) => {
-                if (phone.id)
+                if (phone.id) {
                     toNotDelete.push(phone.id.toString())
-                else
+                    toUpdate.push(phone)
+                } else {
                     toAdd.push(phone)
+                }
             })
 
             await phoneDAO.remove(toNotDelete.length ? `id NOT IN (${toNotDelete})` : '1=1');
+            for (const phone of toUpdate) {
+                await phoneDAO.update(phone);
+            }
             for (const phone of toAdd) {
                 await phoneDAO.create({ number: phone.number, userId: req.user.id });
             }
