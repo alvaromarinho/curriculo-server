@@ -30,7 +30,7 @@ const update = async (req, res, next) => {
 
 const remove = async (req, res, next) => {
     try {
-        const result = await portfolioDAO.remove(req.params.portfolioId)
+        const result = await portfolioDAO.remove({ id: req.params.portfolioId })
         res.status(200).json(`${result.affectedRows} registro(s) deletado(s)`);
     } catch (error) {
         next(new CustomError(error.httpStatusCode || 400, error.message || 'Error deleting portfolio'))

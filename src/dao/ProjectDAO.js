@@ -46,12 +46,14 @@ class ProjectDAO extends DAO {
 
     async remove(filter) {
         const projects = await this.execute(sql.SELECT, null, filter);
-
-        const projectsToDeleteId = []
-        projects.map((p) => projectsToDeleteId.push(p.id));
-
-        await projectImageDAO.remove(`project_id IN (${projectsToDeleteId})`);
-        return await this.execute(sql.DELETE, null, filter);
+        if (projects.length) {
+            const projectsToDeleteId = []
+            projects.map((p) => projectsToDeleteId.push(p.id));
+            await projectImageDAO.remove(`project_id IN (${projectsToDeleteId})`);
+            return await this.execute(sql.DELETE, null, filter);
+        }
+        
+        return { affectedRows: 0 }
     }
 }
 

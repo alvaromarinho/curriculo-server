@@ -38,12 +38,14 @@ class PortfolioDAO extends DAO {
 
     async remove(filter) {
         const portfolios = await this.execute(sql.SELECT, null, filter);
+        if (portfolios.length) {
+            const portfoliosToDeleteId = []
+            portfolios.map((p) => portfoliosToDeleteId.push(p.id));
+            await projectDAO.remove(`portfolio_id IN (${portfoliosToDeleteId})`);
+            return await this.execute(sql.DELETE, null, filter);
+        }
 
-        const portfoliosToDeleteId = []
-        portfolios.map((p) => portfoliosToDeleteId.push(p.id));
-
-        await projectDAO.remove(`portfolio_id IN (${portfoliosToDeleteId})`);
-        return await this.execute(sql.DELETE, null, filter);
+        return { affectedRows: 0 }
     }
 }
 

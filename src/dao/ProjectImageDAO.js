@@ -27,8 +27,12 @@ class ProjectImageDAO extends DAO {
 
     async remove(filter) {
         const projectImages = await this.execute(sql.SELECT, null, filter);
-        projectImages.map((pi) => deleteFile(pi.url));
-        return await this.execute(sql.DELETE, null, filter);
+        if (projectImages.length) {
+            projectImages.map((pi) => deleteFile(pi.url));
+            return await this.execute(sql.DELETE, null, filter);
+        }
+
+        return { affectedRows: 0 }
     }
 }
 
