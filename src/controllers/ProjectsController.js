@@ -21,7 +21,7 @@ const find = async (req, res, next) => {
 
 const update = async (req, res, next) => {
     try {
-        const project = await projectDAO.update({ ...req.body, id: req.params.projectId });
+        const project = await projectDAO.update(req);
         res.status(200).json(project)
     } catch (error) {
         next(new CustomError(error.httpStatusCode || 400, error.message || 'Error updating project'))

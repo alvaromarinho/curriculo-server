@@ -35,12 +35,25 @@ class ProjectDAO extends DAO {
         return projects.map((res) => new Project(res));
     }
 
-    async update(obj) {
+    async update(req) {
+        const obj = { ...req.body, id: req.params.projectId };
         await this.execute(sql.UPDATE, new Project(obj).toDb(), { id: obj.id });
         const [project] = await this.execute(sql.SELECT, null, { id: obj.id });
-        if (!project) throw new CustomError(404, 'No project found');;
+        if (!project) throw new CustomError(404, 'No project found');
 
-        project.images = await projectImageDAO.findBy({ project_id: project.id }) || [];
+        if (req.files && req.files.images && req.files.images.length) {
+            // removendo imagens existentes
+            await projectImageDAO.remove({ project_id: project.id });
+
+            // adicionando novas
+            project.images = [];
+            for (const image of req.files.images) {
+                project.images.push(await projectImageDAO.create(project.id, image, req.user.email));
+            }
+        } else {
+            project.images = await projectImageDAO.findBy({ project_id: project.id }) || [];
+        }
+
         return new Project(project);
     }
 
