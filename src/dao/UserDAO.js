@@ -48,7 +48,7 @@ class UserDAO extends DAO {
     }
 
     async update(req) {
-        if (req.files) {
+        if (req.files && req.files.length) {
             deleteFile(req.body.image);
             req.body.image = uploadImage(req.body.email, req.files.image);
         }
