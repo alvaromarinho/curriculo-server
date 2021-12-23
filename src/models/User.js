@@ -10,7 +10,7 @@ class User {
         this.uf = obj.uf;
         this.description = obj.description;
         this.phones = obj.phones;
-        this.socialNetworks = obj.socialNetworks;
+        this.links = obj.links;
     }
 
     toDb(password) {
