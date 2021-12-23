@@ -14,34 +14,34 @@ router.use((req, res, next) => {
     next();
 });
 
-router.get('/api', (req, res) => res.status(200).json('curriculum v1.0.0'));
-router.post('/api/auth', user.auth);
-router.get('/api/image', (req, res) => getImage(req, res));
-// router.delete('/api/image', (req, res) => deleteFile(req, res));
+router.get('/curriculo', (req, res) => res.status(200).json('curriculum v1.0.0'));
+router.post('/curriculo/auth', user.auth);
+router.get('/curriculo/image', (req, res) => getImage(req, res));
+// router.delete('/curriculo/image', (req, res) => deleteFile(req, res));
 
 // users
-router.get('/api/user/:userId', user.findAllData);
-router.post('/api/user', authMiddle, user.create);
-router.get('/api/user', authMiddle, user.find);
-router.put('/api/user', authMiddle, user.update);
-router.delete('/api/user', authMiddle, user.remove);
+router.get('/curriculo/user/:userId', user.findAllData);
+router.post('/curriculo/user', authMiddle, user.create);
+router.get('/curriculo/user', authMiddle, user.find);
+router.put('/curriculo/user', authMiddle, user.update);
+router.delete('/curriculo/user', authMiddle, user.remove);
 
 // informations
-router.post('/api/informations', authMiddle, info.create);
-router.get('/api/informations', authMiddle, info.find);
-router.put('/api/informations/:informationId', authMiddle, info.resourceOwner, info.update);
-router.delete('/api/informations/:informationId', authMiddle, info.resourceOwner, info.remove);
+router.post('/curriculo/informations', authMiddle, info.create);
+router.get('/curriculo/informations', authMiddle, info.find);
+router.put('/curriculo/informations/:informationId', authMiddle, info.resourceOwner, info.update);
+router.delete('/curriculo/informations/:informationId', authMiddle, info.resourceOwner, info.remove);
 
 // portfolios
-router.post('/api/portfolios', authMiddle, portfolio.create);
-router.get('/api/portfolios', authMiddle, portfolio.find);
-router.put('/api/portfolios/:portfolioId', authMiddle, portfolio.resourceOwner, portfolio.update);
-router.delete('/api/portfolios/:portfolioId', authMiddle, portfolio.resourceOwner, portfolio.remove);
+router.post('/curriculo/portfolios', authMiddle, portfolio.create);
+router.get('/curriculo/portfolios', authMiddle, portfolio.find);
+router.put('/curriculo/portfolios/:portfolioId', authMiddle, portfolio.resourceOwner, portfolio.update);
+router.delete('/curriculo/portfolios/:portfolioId', authMiddle, portfolio.resourceOwner, portfolio.remove);
 
 // projects
-router.post('/api/portfolios/:portfolioId/projects', authMiddle, portfolio.resourceOwner, project.create);
-router.get('/api/portfolios/:portfolioId/projects/:projectId', authMiddle, portfolio.resourceOwner, project.find);
-router.put('/api/portfolios/:portfolioId/projects/:projectId', authMiddle, portfolio.resourceOwner, project.update);
-router.delete('/api/portfolios/:portfolioId/projects/:projectId', authMiddle, portfolio.resourceOwner, project.remove);
+router.post('/curriculo/portfolios/:portfolioId/projects', authMiddle, portfolio.resourceOwner, project.create);
+router.get('/curriculo/portfolios/:portfolioId/projects/:projectId', authMiddle, portfolio.resourceOwner, project.find);
+router.put('/curriculo/portfolios/:portfolioId/projects/:projectId', authMiddle, portfolio.resourceOwner, project.update);
+router.delete('/curriculo/portfolios/:portfolioId/projects/:projectId', authMiddle, portfolio.resourceOwner, project.remove);
 
 module.exports = router;

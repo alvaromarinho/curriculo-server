@@ -30,7 +30,6 @@ CREATE TABLE `phones` (
 CREATE TABLE `social_networks` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
-  `icon` VARCHAR(45) NULL,
   `url` VARCHAR(255) NOT NULL,
   `user_id` INT(11) NOT NULL,
   `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
