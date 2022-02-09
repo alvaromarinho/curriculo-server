@@ -44,7 +44,7 @@ class UserDAO extends DAO {
             user.phones = await phoneDAO.findBy({ user_id: user.id }) || [];
             user.links = await linkDAO.findBy({ user_id: user.id }) || [];
         }
-        return withPass ? { user: new User(user, true), userPassword: user.password } : new User(user, true);
+        return withPass ? { user: new User(user), userPassword: user.password } : new User(user);
     }
 
     async update(req) {

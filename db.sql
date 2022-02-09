@@ -1,4 +1,5 @@
-CREATE DATABASE curriculo;
+CREATE SCHEMA IF NOT EXISTS `curriculo` DEFAULT CHARACTER SET utf8 ;
+USE `curriculo` ;
 
 CREATE TABLE `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -19,6 +20,7 @@ CREATE TABLE `phones` (
   `number` VARCHAR(45) NOT NULL,
   `user_id` INT(11) NOT NULL,
   `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   INDEX `fk_phones_user_idx` (`user_id` ASC),
   CONSTRAINT `fk_phones_user`
